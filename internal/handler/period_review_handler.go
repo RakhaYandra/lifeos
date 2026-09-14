@@ -121,7 +121,7 @@ func (h *PeriodReviewHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in periodReviewIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if !h.validPeriod(in.Period) {
@@ -184,7 +184,7 @@ func (h *PeriodReviewHandler) Update(c *gin.Context) {
 	}
 	var in periodReviewIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if !h.validPeriod(in.Period) {

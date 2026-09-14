@@ -37,7 +37,7 @@ func (h *SettingsHandler) Put(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in settingsIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	s := &repository.SettingsRow{UserID: uid.(int64), ActiveYear: in.ActiveYear, Currency: in.Currency, BudgetWarnPct: in.BudgetWarnPct, GoalWarnPct: in.GoalWarnPct}

@@ -40,7 +40,7 @@ func (h *BudgetHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in budgetIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	b := &repository.BudgetRow{UserID: uid.(int64), Year: in.Year, Month: in.Month, Category: in.Category, Amount: in.Amount}
@@ -96,7 +96,7 @@ func (h *BudgetHandler) Update(c *gin.Context) {
 	}
 	var in budgetIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	b := &repository.BudgetRow{ID: cur.ID, UserID: cur.UserID, Year: in.Year, Month: in.Month, Category: in.Category, Amount: in.Amount}

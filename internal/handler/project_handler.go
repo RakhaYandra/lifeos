@@ -75,7 +75,7 @@ func (h *ProjectHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in projectIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	p, err := toProjectRow(uid.(int64), in)
@@ -135,7 +135,7 @@ func (h *ProjectHandler) Update(c *gin.Context) {
 	}
 	var in projectIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	p, err := toProjectRow(uid.(int64), in)

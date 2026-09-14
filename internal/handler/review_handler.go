@@ -88,7 +88,7 @@ func (h *ReviewHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in reviewIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if _, err := time.Parse("2006-01-02", in.WeekStart); err != nil {
@@ -148,7 +148,7 @@ func (h *ReviewHandler) Update(c *gin.Context) {
 	}
 	var in reviewIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if _, err := time.Parse("2006-01-02", in.WeekStart); err != nil {

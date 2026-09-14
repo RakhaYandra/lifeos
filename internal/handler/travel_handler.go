@@ -56,7 +56,7 @@ func (h *TravelHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in tripIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	t, err := toTripRow(uid.(int64), in)
@@ -128,7 +128,7 @@ func (h *TravelHandler) Update(c *gin.Context) {
 	}
 	var in tripIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	t, err := toTripRow(uid.(int64), in)
@@ -184,7 +184,7 @@ func (h *TravelHandler) AddItin(c *gin.Context) {
 	}
 	var in itinIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if _, err := time.Parse("2006-01-02", in.Date); err != nil {
@@ -212,7 +212,7 @@ func (h *TravelHandler) ToggleItin(c *gin.Context) {
 		Booked bool `json:"booked"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if err := h.Itin.SetBooked(iid, in.Booked); err != nil {
@@ -252,7 +252,7 @@ func (h *TravelHandler) AddPack(c *gin.Context) {
 	}
 	var in packIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	qty := in.Qty
@@ -279,7 +279,7 @@ func (h *TravelHandler) TogglePack(c *gin.Context) {
 		Packed bool `json:"packed"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if err := h.Pack.SetPacked(pid, in.Packed); err != nil {

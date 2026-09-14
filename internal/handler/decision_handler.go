@@ -51,7 +51,7 @@ func (h *DecisionHandler) Create(c *gin.Context) {
 		Notes string `json:"notes"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	id, err := h.Decisions.Create(&repository.DecisionRow{UserID: uid.(int64), Title: in.Title, Notes: in.Notes})
@@ -114,7 +114,7 @@ func (h *DecisionHandler) AddOption(c *gin.Context) {
 		Name string `json:"name" binding:"required,max=200"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	oid, err := h.Options.Create(id, in.Name)
@@ -154,7 +154,7 @@ func (h *DecisionHandler) Mark(c *gin.Context) {
 		Score     float64 `json:"score"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if in.Weight <= 0 {

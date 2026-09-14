@@ -55,7 +55,7 @@ func (h *LearningHandler) CreateLearn(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in learnIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	l, err := toLearnRow(uid.(int64), in)
@@ -99,7 +99,7 @@ func (h *LearningHandler) UpdateLearn(c *gin.Context) {
 	}
 	var in learnIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	l, err := toLearnRow(uid.(int64), in)
@@ -170,7 +170,7 @@ func (h *LearningHandler) CreateRead(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in readIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	x, err := toReadRow(uid.(int64), in)
@@ -214,7 +214,7 @@ func (h *LearningHandler) UpdateRead(c *gin.Context) {
 	}
 	var in readIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	x, err := toReadRow(uid.(int64), in)

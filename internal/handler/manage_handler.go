@@ -56,7 +56,7 @@ func (h *SavingHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in savingIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	s, err := toSavingRow(uid.(int64), in)
@@ -100,7 +100,7 @@ func (h *SavingHandler) Update(c *gin.Context) {
 	}
 	var in savingIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	s, err := toSavingRow(uid.(int64), in)
@@ -144,7 +144,7 @@ func (h *AssetHandler) Create(c *gin.Context) {
 		Notes         string  `json:"notes"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	cond := in.Condition
@@ -221,7 +221,7 @@ func (h *WishlistHandler) Create(c *gin.Context) {
 		TargetDate string  `json:"target_date"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	pr := in.Priority
@@ -294,7 +294,7 @@ func (h *DocumentHandler) Create(c *gin.Context) {
 		Notes        string `json:"notes"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	rd := in.ReminderDays
@@ -390,7 +390,7 @@ func (h *ContactHandler) Create(c *gin.Context) {
 		Notes         string `json:"notes"`
 	}
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	fd := in.FollowupDays

@@ -86,7 +86,7 @@ func (h *HabitHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in habitIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	hb, err := toHabitRow(uid.(int64), in)
@@ -144,7 +144,7 @@ func (h *HabitHandler) Update(c *gin.Context) {
 	}
 	var in habitIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	hb, err := toHabitRow(uid.(int64), in)
@@ -196,7 +196,7 @@ func (h *HabitHandler) Log(c *gin.Context) {
 	}
 	var in habitLogIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	date := in.Date

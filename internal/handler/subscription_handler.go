@@ -64,7 +64,7 @@ func (h *SubscriptionHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in subIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	s, err := toSubRow(uid.(int64), in)
@@ -122,7 +122,7 @@ func (h *SubscriptionHandler) Update(c *gin.Context) {
 	}
 	var in subIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	s, err := toSubRow(uid.(int64), in)

@@ -50,7 +50,7 @@ func (h *TransactionHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in trxIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	t, err := toTrxRow(uid.(int64), in)
@@ -117,7 +117,7 @@ func (h *TransactionHandler) Update(c *gin.Context) {
 	}
 	var in trxIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	t, err := toTrxRow(uid.(int64), in)

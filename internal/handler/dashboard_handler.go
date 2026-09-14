@@ -3,7 +3,6 @@ package handler
 import (
 	"net/http"
 	"strconv"
-	"time"
 
 	"github.com/RakhaYandra/lifeos/internal/repository"
 	"github.com/RakhaYandra/lifeos/internal/service"
@@ -97,6 +96,5 @@ func (h *DashboardHandler) Get(c *gin.Context) {
 		"goals":        gin.H{"active": activeGoals, "at_risk": atRisk},
 		"subs_due_14d": subSoon,
 		"reminders_7d": remSoon,
-		"_ts":          time.Now().Unix(),
 	})
 }

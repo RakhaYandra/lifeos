@@ -48,7 +48,7 @@ func (h *ReminderHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in reminderIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	m, err := toReminderRow(uid.(int64), in)
@@ -106,7 +106,7 @@ func (h *ReminderHandler) Update(c *gin.Context) {
 	}
 	var in reminderIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	m, err := toReminderRow(uid.(int64), in)

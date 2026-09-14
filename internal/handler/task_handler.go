@@ -103,7 +103,7 @@ func (h *TaskHandler) Create(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in taskIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	t, err := toTaskRow(uid.(int64), in)
@@ -167,7 +167,7 @@ func (h *TaskHandler) Update(c *gin.Context) {
 	}
 	var in taskIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	t, err := toTaskRow(uid.(int64), in)

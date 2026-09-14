@@ -78,7 +78,7 @@ func (h *HealthHandler) PutLog(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in healthLogIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	row, err := toHealthRow(uid.(int64), in)
@@ -131,7 +131,7 @@ func (h *HealthHandler) CreateWorkout(c *gin.Context) {
 	uid, _ := c.Get("userID")
 	var in workoutIn
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	if _, err := time.Parse("2006-01-02", in.Date); err != nil {

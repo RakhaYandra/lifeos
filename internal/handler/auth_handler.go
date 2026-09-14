@@ -24,7 +24,7 @@ type creds struct {
 func (h *AuthHandler) Register(c *gin.Context) {
 	var in creds
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	id, err := h.Svc.Register(in.Email, in.Password)
@@ -45,7 +45,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 func (h *AuthHandler) Login(c *gin.Context) {
 	var in creds
 	if err := c.ShouldBindJSON(&in); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		badRequest(c)
 		return
 	}
 	tok, err := h.Svc.Login(in.Email, in.Password)
