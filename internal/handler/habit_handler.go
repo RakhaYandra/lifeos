@@ -232,3 +232,25 @@ func (h *HabitHandler) Streaks(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, out)
 }
+
+func (h *HabitHandler) Logs(c *gin.Context) {
+	uid, _ := c.Get("userID")
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
+	if _, err := h.Habits.Get(uid.(int64), id); errors.Is(err, sql.ErrNoRows) {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
+		return
+	} else if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	}
+	rows, err := h.Habits.Logs(id, c.Query("from"), c.Query("to"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	}
+	out := []gin.H{}
+	for _, l := range rows {
+		out = append(out, gin.H{"date": l.Date, "done": l.Done})
+	}
+	c.JSON(http.StatusOK, out)
+}

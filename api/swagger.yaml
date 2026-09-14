@@ -386,6 +386,16 @@ paths:
                 done: { type: boolean }
       responses:
         "200": { description: ok }
+  /v1/habits/{id}/logs:
+    get:
+      summary: Riwayat log habit (?from=&to=, untuk heatmap)
+      operationId: habitLogs
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: list }
+        "404": { description: not_found }
   /v1/transactions:
     get:
       summary: List transaksi (?type=&category=&year=&month=)

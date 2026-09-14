@@ -70,6 +70,7 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	hb.PUT("/:id", d.Habit.Update)
 	hb.DELETE("/:id", d.Habit.Delete)
 	hb.POST("/:id/log", d.Habit.Log)
+	hb.GET("/:id/logs", d.Habit.Logs)
 
 	tx := auth.Group("/transactions")
 	tx.POST("", d.Transaction.Create)

@@ -507,6 +507,19 @@
           "raw": "{\"title\":\"Bayar kos\",\"date\":\"2026-10-01\",\"recurrence\":\"monthly\"}"
         }
       }
+    },
+    {
+      "name": "habit-logs",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/habits/1/logs",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
     }
   ],
   "variable": [

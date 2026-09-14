@@ -92,3 +92,38 @@ func (r *HabitRepository) DoneDates(habitID int64) ([]string, error) {
 	}
 	return out, rows.Err()
 }
+
+type HabitLogRow struct {
+	Date string
+	Done bool
+}
+
+func (r *HabitRepository) Logs(habitID int64, from, to string) ([]HabitLogRow, error) {
+	q := `SELECT date,done FROM habit_logs WHERE habit_id=?`
+	args := []any{habitID}
+	if from != "" {
+		q += ` AND date>=?`
+		args = append(args, from)
+	}
+	if to != "" {
+		q += ` AND date<=?`
+		args = append(args, to)
+	}
+	q += ` ORDER BY date`
+	rows, err := r.DB.Query(q, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close() //nolint:errcheck
+	var out []HabitLogRow
+	for rows.Next() {
+		var l HabitLogRow
+		var done int
+		if err := rows.Scan(&l.Date, &done); err != nil {
+			return nil, err
+		}
+		l.Done = done == 1
+		out = append(out, l)
+	}
+	return out, rows.Err()
+}
