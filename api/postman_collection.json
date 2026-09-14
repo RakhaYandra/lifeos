@@ -1,18 +1,39 @@
 {
   "info": {
-    "name": "lifeos P4",
+    "name": "lifeos",
+    "description": "Newman CI: single-user register 403, login->token, full MVP flow + cleanup.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ],
   "item": [
     {
-      "name": "healthz",
+      "name": "health",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/healthz"
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "register",
+      "name": "register blocked (single-user)",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/auth/register",
@@ -24,9 +45,19 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}"
+          "raw": "{\"email\":\"baru@example.com\",\"password\":\"Rahasia123\"}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('403',()=>pm.response.to.have.status(403));"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "login",
@@ -43,7 +74,18 @@
           "mode": "raw",
           "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));",
+              "pm.collectionVariables.set('token',pm.response.json().token);"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "me",
@@ -56,10 +98,20 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "get-settings",
+      "name": "get settings",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/settings",
@@ -69,10 +121,20 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "list-life-areas",
+      "name": "life areas",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/life-areas",
@@ -82,10 +144,43 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-project",
+      "name": "list projects",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/projects",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create project",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/projects",
@@ -101,25 +196,23 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"name\":\"Renovasi kamar\",\"status\":\"active\",\"target_date\":\"2026-10-01\"}"
+          "raw": "{\"name\":\"Newman probe\",\"status\":\"active\"}"
         }
-      }
-    },
-    {
-      "name": "list-projects",
-      "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/v1/projects",
-        "header": [
-          {
-            "key": "Authorization",
-            "value": "Bearer {{token}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('projectId',pm.response.json().id);"
+            ]
           }
-        ]
-      }
+        }
+      ]
     },
     {
-      "name": "create-task",
+      "name": "create task",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/tasks",
@@ -135,12 +228,23 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"title\":\"Cat dinding\",\"priority\":\"high\",\"due_date\":\"2026-09-20\"}"
+          "raw": "{\"title\":\"Newman probe task\",\"project_id\":1,\"due_date\":\"2026-09-20\"}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('taskId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "list-tasks",
+      "name": "list tasks",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/tasks",
@@ -150,10 +254,20 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "tasks-today",
+      "name": "tasks today",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/tasks/today",
@@ -163,23 +277,151 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "tasks-week",
+      "name": "tasks week",
       "request": {
         "method": "GET",
-        "url": "{{baseUrl}}/v1/tasks/week",
+        "url": "{{baseUrl}}/v1/tasks/week?start=2026-09-08",
         "header": [
           {
             "key": "Authorization",
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-goal",
+      "name": "complete task",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/v1/tasks/{{taskId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Newman probe task\",\"status\":\"completed\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "bad task status",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/tasks",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"x\",\"status\":\"ngawur\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('400',()=>pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "delete task",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/tasks/{{taskId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "list goals annual",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/goals?level=annual",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create goal",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/goals",
@@ -195,46 +437,69 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"title\":\"Dana darurat 20jt\",\"level\":\"annual\",\"metric\":\"IDR\",\"target_value\":20000000,\"current_value\":5000000}"
+          "raw": "{\"title\":\"Newman goal\",\"level\":\"monthly\",\"target_value\":10,\"current_value\":3}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('goalId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "list-goals",
+      "name": "delete goal",
       "request": {
-        "method": "GET",
-        "url": "{{baseUrl}}/v1/goals?level=annual",
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/goals/{{goalId}}",
         "header": [
           {
             "key": "Authorization",
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-habit",
+      "name": "list habits",
       "request": {
-        "method": "POST",
+        "method": "GET",
         "url": "{{baseUrl}}/v1/habits",
         "header": [
           {
             "key": "Authorization",
             "value": "Bearer {{token}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"name\":\"Olahraga\",\"frequency\":\"daily\"}"
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
         }
-      }
+      ]
     },
     {
-      "name": "log-habit",
+      "name": "log habit",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/habits/1/log",
@@ -252,10 +517,20 @@
           "mode": "raw",
           "raw": "{}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "habit-streaks",
+      "name": "habit streaks",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/habits/streaks",
@@ -265,10 +540,43 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-trx",
+      "name": "habit logs",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/habits/1/logs",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create trx",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/transactions",
@@ -284,12 +592,23 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"date\":\"2026-09-01\",\"type\":\"expense\",\"category\":\"Makan\",\"amount\":25000}"
+          "raw": "{\"date\":\"2026-09-14\",\"type\":\"expense\",\"category\":\"Makan\",\"amount\":10000}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('trxId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "trx-summary",
+      "name": "trx summary",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/transactions/summary?year=2026&month=9",
@@ -299,31 +618,43 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-budget",
+      "name": "delete trx",
       "request": {
-        "method": "POST",
-        "url": "{{baseUrl}}/v1/budgets",
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/transactions/{{trxId}}",
         "header": [
           {
             "key": "Authorization",
             "value": "Bearer {{token}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"year\":2026,\"month\":9,\"category\":\"Makan\",\"amount\":1500000}"
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
         }
-      }
+      ]
     },
     {
-      "name": "list-budgets",
+      "name": "list budgets",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/budgets?year=2026&month=9",
@@ -333,31 +664,43 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-sub",
+      "name": "list subs",
       "request": {
-        "method": "POST",
+        "method": "GET",
         "url": "{{baseUrl}}/v1/subscriptions",
         "header": [
           {
             "key": "Authorization",
             "value": "Bearer {{token}}"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json"
           }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\"service\":\"Spotify\",\"cost\":54999,\"frequency\":\"monthly\",\"next_billing\":\"2026-09-20\"}"
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
         }
-      }
+      ]
     },
     {
-      "name": "subs-upcoming",
+      "name": "subs upcoming",
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/subscriptions/upcoming",
@@ -367,7 +710,17 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
       "name": "dashboard",
@@ -380,10 +733,20 @@
             "value": "Bearer {{token}}"
           }
         ]
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "put-health",
+      "name": "put health",
       "request": {
         "method": "PUT",
         "url": "{{baseUrl}}/v1/health-logs",
@@ -401,10 +764,20 @@
           "mode": "raw",
           "raw": "{\"date\":\"2026-09-14\",\"sleep_hours\":7}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-workout",
+      "name": "create workout",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/workouts",
@@ -420,12 +793,22 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"date\":\"2026-09-14\",\"type\":\"Lari\",\"duration_min\":30}"
+          "raw": "{\"date\":\"2026-09-14\",\"type\":\"Lari\",\"duration_min\":20}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-learning",
+      "name": "create learning",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/learning",
@@ -441,12 +824,46 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"topic\":\"Go generics\",\"type\":\"course\",\"progress\":40}"
+          "raw": "{\"topic\":\"Newman probe\",\"progress\":10}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('learnId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-reading",
+      "name": "delete learning",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/learning/{{learnId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create reading",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/reading",
@@ -462,12 +879,46 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"title\":\"Clean Code\",\"type\":\"book\",\"status\":\"reading\"}"
+          "raw": "{\"title\":\"Newman probe\"}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('readId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-review",
+      "name": "delete reading",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/reading/{{readId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create review",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/reviews",
@@ -483,12 +934,46 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"week_start\":\"2026-09-08\",\"wins\":\"P1-P3 selesai\"}"
+          "raw": "{\"week_start\":\"2026-09-14\",\"wins\":\"newman\"}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('reviewId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "create-reminder",
+      "name": "delete review",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/reviews/{{reviewId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create reminder",
       "request": {
         "method": "POST",
         "url": "{{baseUrl}}/v1/reminders",
@@ -504,32 +989,89 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\"title\":\"Bayar kos\",\"date\":\"2026-10-01\",\"recurrence\":\"monthly\"}"
+          "raw": "{\"title\":\"Newman probe\",\"date\":\"2026-10-01\"}"
         }
-      }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('remId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
     },
     {
-      "name": "habit-logs",
+      "name": "reminders upcoming",
       "request": {
         "method": "GET",
-        "url": "{{baseUrl}}/v1/habits/1/logs",
+        "url": "{{baseUrl}}/v1/reminders/upcoming",
         "header": [
           {
             "key": "Authorization",
             "value": "Bearer {{token}}"
           }
         ]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:8080"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
     },
     {
-      "key": "token",
-      "value": ""
+      "name": "delete reminder",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/reminders/{{remId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "delete project",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/projects/{{projectId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
     }
   ]
 }
