@@ -1139,6 +1139,211 @@ paths:
                 score: { type: number }
       responses:
         "200": { description: ok }
+  /v1/savings:
+    get:
+      summary: List tabungan + progres + ETA bulan
+      operationId: listSavings
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah target tabungan
+      operationId: createSaving
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, target_amount]
+              properties:
+                name: { type: string, example: Dana darurat }
+                target_amount: { type: number }
+                current_amount: { type: number }
+                monthly_contribution: { type: number }
+      responses:
+        "201": { description: created }
+  /v1/savings/{id}:
+    put:
+      summary: Update tabungan
+      operationId: updateSaving
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, target_amount]
+              properties:
+                name: { type: string }
+                target_amount: { type: number }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus tabungan
+      operationId: deleteSaving
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/assets:
+    get:
+      summary: List aset + flag garansi
+      operationId: listAssets
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah aset
+      operationId: createAsset
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string, example: Laptop }
+                category: { type: string }
+                current_value: { type: number }
+      responses:
+        "201": { description: created }
+  /v1/assets/{id}:
+    delete:
+      summary: Hapus aset
+      operationId: deleteAsset
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/wishlist:
+    get:
+      summary: List wishlist + progres
+      operationId: listWishlist
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah wishlist
+      operationId: createWishlist
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [item]
+              properties:
+                item: { type: string, example: Sepatu lari }
+                est_price: { type: number }
+                saved: { type: number }
+      responses:
+        "201": { description: created }
+  /v1/wishlist/{id}:
+    delete:
+      summary: Hapus wishlist
+      operationId: deleteWishlist
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/documents:
+    get:
+      summary: List dokumen + days_until
+      operationId: listDocuments
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah dokumen
+      operationId: createDocument
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [item, expiry_date]
+              properties:
+                item: { type: string, example: STNK motor }
+                expiry_date: { type: string, format: date }
+      responses:
+        "201": { description: created }
+  /v1/documents/upcoming:
+    get:
+      summary: Dokumen mendekati kedaluwarsa
+      operationId: documentsUpcoming
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+  /v1/documents/{id}:
+    delete:
+      summary: Hapus dokumen
+      operationId: deleteDocument
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/contacts:
+    get:
+      summary: List kontak + followup_due
+      operationId: listContacts
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah kontak
+      operationId: createContact
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                relation: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/contacts/followups:
+    get:
+      summary: Kontak butuh follow-up
+      operationId: contactFollowups
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+  /v1/contacts/{id}/touch:
+    post:
+      summary: Catat kontak hari ini
+      operationId: touchContact
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+  /v1/contacts/{id}:
+    delete:
+      summary: Hapus kontak
+      operationId: deleteContact
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
   /v1/reminders:
     get:
       summary: List reminders + next/days_until

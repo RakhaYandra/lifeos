@@ -42,6 +42,11 @@ func main() {
 	decisions := &repository.DecisionRepository{DB: db}
 	decOpts := &repository.DecisionOptionRepository{DB: db}
 	decMarks := &repository.DecisionMarkRepository{DB: db}
+	savings := &repository.SavingRepository{DB: db}
+	assets := &repository.AssetRepository{DB: db}
+	wishlist := &repository.WishlistRepository{DB: db}
+	docs := &repository.DocumentRepository{DB: db}
+	contacts := &repository.ContactRepository{DB: db}
 
 	authH := &handler.AuthHandler{
 		Svc:      &service.AuthService{Users: users, Secret: cfg.JWTSecret},
@@ -66,9 +71,14 @@ func main() {
 	yearlyH := &handler.PeriodReviewHandler{Reviews: yearly, Tasks: tasks, Trx: trx, Habits: habits, Goals: goals, Kind: "yearly"}
 	travelH := &handler.TravelHandler{Trips: trips, Itin: itin, Pack: pack}
 	decisionH := &handler.DecisionHandler{Decisions: decisions, Options: decOpts, Marks: decMarks}
+	savingH := &handler.SavingHandler{Savings: savings}
+	assetH := &handler.AssetHandler{Assets: assets}
+	wishH := &handler.WishlistHandler{Wishlist: wishlist}
+	docH := &handler.DocumentHandler{Docs: docs}
+	contactH := &handler.ContactHandler{Contacts: contacts}
 	dashH := &handler.DashboardHandler{Tasks: tasks, Habits: habits, Trx: trx, Goals: goals, Subs: subs, Reminds: reminds}
 
-	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH, Goal: goalH, Milestone: msH, Habit: habitH, Transaction: trxH, Budget: budH, Subscription: subH, Health: healthH, Learning: learnH, Review: reviewH, Reminder: remindH, Monthly: monthlyH, Yearly: yearlyH, Travel: travelH, Decision: decisionH, Dashboard: dashH}, cfg.JWTSecret, cfg.FrontendURL)
+	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH, Goal: goalH, Milestone: msH, Habit: habitH, Transaction: trxH, Budget: budH, Subscription: subH, Health: healthH, Learning: learnH, Review: reviewH, Reminder: remindH, Monthly: monthlyH, Yearly: yearlyH, Travel: travelH, Decision: decisionH, Saving: savingH, Asset: assetH, Wishlist: wishH, Document: docH, Contact: contactH, Dashboard: dashH}, cfg.JWTSecret, cfg.FrontendURL)
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatal(err)
 	}

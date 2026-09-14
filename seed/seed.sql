@@ -271,6 +271,32 @@ INSERT INTO decision_marks (option_id,criterion,weight,score) VALUES
 (3,'Biaya',3,9),(3,'Jarak',2,9),
 (4,'Biaya',3,7),(4,'Jarak',2,6);
 
+-- Fase 2D: savings detail + aset + wishlist + dokumen + kontak
+INSERT INTO savings_goals (user_id,name,target_amount,current_amount,monthly_contribution,target_date,status) VALUES
+(1,'Dana darurat',20000000,8000000,800000,'2027-12-31','active'),
+(1,'Laptop baru',15000000,3000000,1000000,'2027-09-30','active'),
+(1,'Liburan Jepang',25000000,1000000,500000,'2028-06-30','paused');
+INSERT INTO assets (user_id,name,category,purchase_price,current_value,condition,location,warranty_end,notes) VALUES
+(1,'ThinkPad T480','Elektronik',4500000,2500000,'good','Kamar','', ''),
+(1,'Sepatu lari','Olahraga',1200000,600000,'worn','Kamar','', ''),
+(1,'Motor Vario','Kendaraan',22000000,15000000,'good','Parkiran','2027-02-15',''),
+(1,'Kulkas','Rumah',3500000,2000000,'good','Dapur','2026-10-05','');
+INSERT INTO wishlist (user_id,item,category,priority,est_price,saved,target_date,status) VALUES
+(1,'Sepatu lari baru','Olahraga','high',1800000,600000,'2026-10-31','saving'),
+(1,'Monitor 24 inch','Elektronik','medium',2500000,0,'2027-01-31','planned'),
+(1,'Jaket windbreaker','Pakaian','low',450000,450000,'2026-09-30','planned');
+INSERT INTO documents (user_id,item,category,expiry_date,reminder_days,notes) VALUES
+(1,'STNK motor','Kendaraan','2027-02-15',30,''),
+(1,'SIM C','Pribadi','2026-10-20',30,''),
+(1,'Paspor','Pribadi','2028-05-01',90,''),
+(1,'Kontrak kos','Hunian','2026-09-30',30,'');
+INSERT INTO contacts (user_id,name,relation,birthday,last_contact,contact_method,followup_days,notes) VALUES
+(1,'Ibu','Keluarga','1970-11-20','2026-09-13','WA',7,''),
+(1,'Budi','Teman','1998-03-15','2026-07-01','WA',30,''),
+(1,'Pak Hendra','Mentor','1985-06-10',NULL,'Email',60,''),
+(1,'Sinta','Kolega',NULL,'2026-09-01','WA',14,''),
+(1,'Dokter gigi','Profesional',NULL,'2026-06-01','Telepon',180,'kontrol 6 bulan');
+
 -- Fase 2A: quarterly goals (cascade annual->quarterly) + reparent monthly
 INSERT INTO goals (user_id,level,parent_id,life_area_id,title,metric,target_value,current_value,status,target_date) VALUES
 (1,'quarterly',1,2,'Q3 nabung 6jt','IDR',6000000,2800000,'active','2026-09-30'),

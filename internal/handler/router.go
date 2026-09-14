@@ -23,6 +23,11 @@ type Deps struct {
 	Yearly       *PeriodReviewHandler
 	Travel       *TravelHandler
 	Decision     *DecisionHandler
+	Saving       *SavingHandler
+	Asset        *AssetHandler
+	Wishlist     *WishlistHandler
+	Document     *DocumentHandler
+	Contact      *ContactHandler
 	Health       *HealthHandler
 	Learning     *LearningHandler
 	Review       *ReviewHandler
@@ -180,5 +185,34 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	dc.POST("/:id/options", d.Decision.AddOption)
 	dc.DELETE("/:id/options/:oid", d.Decision.DeleteOption)
 	dc.POST("/:id/options/:oid/marks", d.Decision.Mark)
+
+	sv := auth.Group("/savings")
+	sv.POST("", d.Saving.Create)
+	sv.GET("", d.Saving.List)
+	sv.PUT("/:id", d.Saving.Update)
+	sv.DELETE("/:id", d.Saving.Delete)
+
+	as := auth.Group("/assets")
+	as.POST("", d.Asset.Create)
+	as.GET("", d.Asset.List)
+	as.DELETE("/:id", d.Asset.Delete)
+
+	wl := auth.Group("/wishlist")
+	wl.POST("", d.Wishlist.Create)
+	wl.GET("", d.Wishlist.List)
+	wl.DELETE("/:id", d.Wishlist.Delete)
+
+	dc2 := auth.Group("/documents")
+	dc2.POST("", d.Document.Create)
+	dc2.GET("", d.Document.List)
+	dc2.GET("/upcoming", d.Document.Upcoming)
+	dc2.DELETE("/:id", d.Document.Delete)
+
+	ct := auth.Group("/contacts")
+	ct.POST("", d.Contact.Create)
+	ct.GET("", d.Contact.List)
+	ct.GET("/followups", d.Contact.Followups)
+	ct.POST("/:id/touch", d.Contact.Touch)
+	ct.DELETE("/:id", d.Contact.Delete)
 	return r
 }
