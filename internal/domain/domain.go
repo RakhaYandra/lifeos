@@ -55,3 +55,30 @@ type Task struct {
 	DaysLeft     *int
 	Overdue      bool
 }
+
+type Goal struct {
+	ID           int64
+	UserID       int64
+	Level        string
+	ParentID     *int64
+	LifeAreaID   *int64
+	Title        string
+	Metric       string
+	TargetValue  float64
+	CurrentValue float64
+	Progress     int
+	Status       string
+	TargetDate   string
+}
+
+type Habit struct {
+	ID            int64
+	UserID        int64
+	Name          string
+	LifeAreaID    *int64
+	Frequency     string
+	TargetPerWeek int
+	StartDate     string
+	Active        bool
+	Streak        int
+}

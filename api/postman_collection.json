@@ -1,18 +1,281 @@
 {
-  "info": { "name": "lifeos P1", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "info": {
+    "name": "lifeos P2",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
   "item": [
-    { "name": "healthz", "request": { "method": "GET", "url": "{{baseUrl}}/healthz" } },
-    { "name": "register", "request": { "method": "POST", "url": "{{baseUrl}}/v1/auth/register", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}" } } },
-    { "name": "login", "request": { "method": "POST", "url": "{{baseUrl}}/v1/auth/login", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}" } } },
-    { "name": "me", "request": { "method": "GET", "url": "{{baseUrl}}/v1/me", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
-    { "name": "get-settings", "request": { "method": "GET", "url": "{{baseUrl}}/v1/settings", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
-    { "name": "list-life-areas", "request": { "method": "GET", "url": "{{baseUrl}}/v1/life-areas", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
-    { "name": "create-project", "request": { "method": "POST", "url": "{{baseUrl}}/v1/projects", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\":\"Renovasi kamar\",\"status\":\"active\",\"target_date\":\"2026-10-01\"}" } } },
-    { "name": "list-projects", "request": { "method": "GET", "url": "{{baseUrl}}/v1/projects", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
-    { "name": "create-task", "request": { "method": "POST", "url": "{{baseUrl}}/v1/tasks", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }, { "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"title\":\"Cat dinding\",\"priority\":\"high\",\"due_date\":\"2026-09-20\"}" } } },
-    { "name": "list-tasks", "request": { "method": "GET", "url": "{{baseUrl}}/v1/tasks", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
-    { "name": "tasks-today", "request": { "method": "GET", "url": "{{baseUrl}}/v1/tasks/today", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
-    { "name": "tasks-week", "request": { "method": "GET", "url": "{{baseUrl}}/v1/tasks/week", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } }
+    {
+      "name": "healthz",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/healthz"
+      }
+    },
+    {
+      "name": "register",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/auth/register",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}"
+        }
+      }
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/auth/login",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}"
+        }
+      }
+    },
+    {
+      "name": "me",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/me",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "get-settings",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/settings",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "list-life-areas",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/life-areas",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "create-project",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/projects",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"Renovasi kamar\",\"status\":\"active\",\"target_date\":\"2026-10-01\"}"
+        }
+      }
+    },
+    {
+      "name": "list-projects",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/projects",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "create-task",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/tasks",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Cat dinding\",\"priority\":\"high\",\"due_date\":\"2026-09-20\"}"
+        }
+      }
+    },
+    {
+      "name": "list-tasks",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/tasks",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "tasks-today",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/tasks/today",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "tasks-week",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/tasks/week",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "create-goal",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/goals",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Dana darurat 20jt\",\"level\":\"annual\",\"metric\":\"IDR\",\"target_value\":20000000,\"current_value\":5000000}"
+        }
+      }
+    },
+    {
+      "name": "list-goals",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/goals?level=annual",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "create-habit",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/habits",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"Olahraga\",\"frequency\":\"daily\"}"
+        }
+      }
+    },
+    {
+      "name": "log-habit",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/habits/1/log",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        }
+      }
+    },
+    {
+      "name": "habit-streaks",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/habits/streaks",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    }
   ],
-  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080" }, { "key": "token", "value": "" }]
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
 }

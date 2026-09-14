@@ -50,6 +50,25 @@ components:
         status: { type: string, example: inbox }
         priority: { type: string, example: high }
         due_date: { type: string, format: date }
+    GoalIn:
+      type: object
+      required: [title]
+      properties:
+        title: { type: string, example: Dana darurat 20jt }
+        level: { type: string, example: annual }
+        parent_id: { type: integer }
+        metric: { type: string, example: IDR }
+        target_value: { type: number, example: 20000000 }
+        current_value: { type: number, example: 5000000 }
+        status: { type: string, example: active }
+        target_date: { type: string, format: date }
+    HabitIn:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, example: Olahraga }
+        frequency: { type: string, example: daily }
+        target_per_week: { type: integer, example: 3 }
 security: []
 paths:
   /healthz:
@@ -221,3 +240,122 @@ paths:
         - { name: id, in: path, required: true, schema: { type: integer } }
       responses:
         "204": { description: deleted }
+  /v1/goals:
+    get:
+      summary: List goals (?level=annual|monthly, progress cap 0-100)
+      operationId: listGoals
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat goal
+      operationId: createGoal
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/GoalIn" } }
+      responses:
+        "201": { description: created }
+  /v1/goals/{id}:
+    get:
+      summary: Detail goal
+      operationId: getGoal
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update goal
+      operationId: updateGoal
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/GoalIn" } }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus goal
+      operationId: deleteGoal
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/habits:
+    get:
+      summary: List habits + streak
+      operationId: listHabits
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat habit
+      operationId: createHabit
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/HabitIn" } }
+      responses:
+        "201": { description: created }
+  /v1/habits/streaks:
+    get:
+      summary: Streak semua habits
+      operationId: habitStreaks
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+  /v1/habits/{id}:
+    get:
+      summary: Detail habit
+      operationId: getHabit
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update habit
+      operationId: updateHabit
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/HabitIn" } }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus habit
+      operationId: deleteHabit
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/habits/{id}/log:
+    post:
+      summary: Centang habit (default hari ini WIB)
+      operationId: logHabit
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date: { type: string, format: date }
+                done: { type: boolean }
+      responses:
+        "200": { description: ok }

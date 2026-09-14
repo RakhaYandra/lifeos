@@ -22,6 +22,8 @@ func main() {
 	areas := &repository.LifeAreaRepository{DB: db}
 	projects := &repository.ProjectRepository{DB: db}
 	tasks := &repository.TaskRepository{DB: db}
+	goals := &repository.GoalRepository{DB: db}
+	habits := &repository.HabitRepository{DB: db}
 
 	authH := &handler.AuthHandler{
 		Svc:      &service.AuthService{Users: users, Secret: cfg.JWTSecret},
@@ -32,8 +34,10 @@ func main() {
 	areaH := &handler.LifeAreaHandler{Areas: areas}
 	projH := &handler.ProjectHandler{Projects: projects}
 	taskH := &handler.TaskHandler{Tasks: tasks}
+	goalH := &handler.GoalHandler{Goals: goals}
+	habitH := &handler.HabitHandler{Habits: habits}
 
-	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH}, cfg.JWTSecret, cfg.FrontendURL)
+	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH, Goal: goalH, Habit: habitH}, cfg.JWTSecret, cfg.FrontendURL)
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatal(err)
 	}

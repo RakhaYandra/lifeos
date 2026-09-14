@@ -13,6 +13,8 @@ type Deps struct {
 	LifeArea *LifeAreaHandler
 	Project  *ProjectHandler
 	Task     *TaskHandler
+	Goal     *GoalHandler
+	Habit    *HabitHandler
 }
 
 func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
@@ -44,5 +46,21 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	tk.GET("/:id", d.Task.Get)
 	tk.PUT("/:id", d.Task.Update)
 	tk.DELETE("/:id", d.Task.Delete)
+
+	gl := auth.Group("/goals")
+	gl.POST("", d.Goal.Create)
+	gl.GET("", d.Goal.List)
+	gl.GET("/:id", d.Goal.Get)
+	gl.PUT("/:id", d.Goal.Update)
+	gl.DELETE("/:id", d.Goal.Delete)
+
+	hb := auth.Group("/habits")
+	hb.POST("", d.Habit.Create)
+	hb.GET("", d.Habit.List)
+	hb.GET("/streaks", d.Habit.Streaks)
+	hb.GET("/:id", d.Habit.Get)
+	hb.PUT("/:id", d.Habit.Update)
+	hb.DELETE("/:id", d.Habit.Delete)
+	hb.POST("/:id/log", d.Habit.Log)
 	return r
 }
