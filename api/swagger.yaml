@@ -69,6 +69,33 @@ components:
         name: { type: string, example: Olahraga }
         frequency: { type: string, example: daily }
         target_per_week: { type: integer, example: 3 }
+    TrxIn:
+      type: object
+      required: [date, type, category, amount]
+      properties:
+        date: { type: string, format: date, example: "2026-09-01" }
+        type: { type: string, example: expense }
+        category: { type: string, example: Makan }
+        description: { type: string, example: Warteg }
+        amount: { type: number, example: 25000 }
+        account: { type: string, example: Tunai }
+    BudgetIn:
+      type: object
+      required: [year, month, category, amount]
+      properties:
+        year: { type: integer, example: 2026 }
+        month: { type: integer, example: 9 }
+        category: { type: string, example: Makan }
+        amount: { type: number, example: 1500000 }
+    SubIn:
+      type: object
+      required: [service, next_billing]
+      properties:
+        service: { type: string, example: Spotify }
+        category: { type: string, example: Hiburan }
+        cost: { type: number, example: 54999 }
+        frequency: { type: string, example: monthly }
+        next_billing: { type: string, format: date }
 security: []
 paths:
   /healthz:
@@ -359,3 +386,158 @@ paths:
                 done: { type: boolean }
       responses:
         "200": { description: ok }
+  /v1/transactions:
+    get:
+      summary: List transaksi (?type=&category=&year=&month=)
+      operationId: listTrx
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Catat transaksi
+      operationId: createTrx
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/TrxIn" } }
+      responses:
+        "201": { description: created }
+  /v1/transactions/summary:
+    get:
+      summary: Ringkasan bulan (?year=&month=)
+      operationId: trxSummary
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: ok }
+  /v1/transactions/{id}:
+    get:
+      summary: Detail transaksi
+      operationId: getTrx
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update transaksi
+      operationId: updateTrx
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/TrxIn" } }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus transaksi
+      operationId: deleteTrx
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/budgets:
+    get:
+      summary: List budget + aktual otomatis (?year=&month=)
+      operationId: listBudgets
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat budget
+      operationId: createBudget
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/BudgetIn" } }
+      responses:
+        "201": { description: created }
+  /v1/budgets/{id}:
+    get:
+      summary: Detail budget
+      operationId: getBudget
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update budget
+      operationId: updateBudget
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/BudgetIn" } }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus budget
+      operationId: deleteBudget
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/subscriptions:
+    get:
+      summary: List langganan + annual_cost + days_until
+      operationId: listSubs
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah langganan
+      operationId: createSub
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/SubIn" } }
+      responses:
+        "201": { description: created }
+  /v1/subscriptions/upcoming:
+    get:
+      summary: Renewal dekat (?within_days=14)
+      operationId: subsUpcoming
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+  /v1/subscriptions/{id}:
+    get:
+      summary: Detail langganan
+      operationId: getSub
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update langganan
+      operationId: updateSub
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/SubIn" } }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus langganan
+      operationId: deleteSub
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }

@@ -82,3 +82,44 @@ type Habit struct {
 	Active        bool
 	Streak        int
 }
+
+type Transaction struct {
+	ID          int64
+	UserID      int64
+	Date        string
+	Type        string
+	Category    string
+	Description string
+	Amount      float64
+	Account     string
+	Recurring   bool
+}
+
+type Budget struct {
+	ID        int64
+	UserID    int64
+	Year      int
+	Month     int
+	Category  string
+	Amount    float64
+	Actual    float64
+	Remaining float64
+	UtilPct   float64
+	Status    string
+}
+
+type Subscription struct {
+	ID            int64
+	UserID        int64
+	Service       string
+	Category      string
+	Cost          float64
+	Frequency     string
+	NextBilling   string
+	PaymentMethod string
+	AutoRenew     bool
+	Active        bool
+	AnnualCost    float64
+	DaysUntil     *int
+	Notes         string
+}

@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "lifeos P2",
+    "name": "lifeos P3",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -259,6 +259,108 @@
       "request": {
         "method": "GET",
         "url": "{{baseUrl}}/v1/habits/streaks",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "create-trx",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/transactions",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"date\":\"2026-09-01\",\"type\":\"expense\",\"category\":\"Makan\",\"amount\":25000}"
+        }
+      }
+    },
+    {
+      "name": "trx-summary",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/transactions/summary?year=2026&month=9",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "create-budget",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/budgets",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"year\":2026,\"month\":9,\"category\":\"Makan\",\"amount\":1500000}"
+        }
+      }
+    },
+    {
+      "name": "list-budgets",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/budgets?year=2026&month=9",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "create-sub",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/subscriptions",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"service\":\"Spotify\",\"cost\":54999,\"frequency\":\"monthly\",\"next_billing\":\"2026-09-20\"}"
+        }
+      }
+    },
+    {
+      "name": "subs-upcoming",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/subscriptions/upcoming",
         "header": [
           {
             "key": "Authorization",

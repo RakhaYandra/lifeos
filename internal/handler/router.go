@@ -8,13 +8,16 @@ import (
 )
 
 type Deps struct {
-	Auth     *AuthHandler
-	Settings *SettingsHandler
-	LifeArea *LifeAreaHandler
-	Project  *ProjectHandler
-	Task     *TaskHandler
-	Goal     *GoalHandler
-	Habit    *HabitHandler
+	Auth         *AuthHandler
+	Settings     *SettingsHandler
+	LifeArea     *LifeAreaHandler
+	Project      *ProjectHandler
+	Task         *TaskHandler
+	Goal         *GoalHandler
+	Habit        *HabitHandler
+	Transaction  *TransactionHandler
+	Budget       *BudgetHandler
+	Subscription *SubscriptionHandler
 }
 
 func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
@@ -62,5 +65,28 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	hb.PUT("/:id", d.Habit.Update)
 	hb.DELETE("/:id", d.Habit.Delete)
 	hb.POST("/:id/log", d.Habit.Log)
+
+	tx := auth.Group("/transactions")
+	tx.POST("", d.Transaction.Create)
+	tx.GET("", d.Transaction.List)
+	tx.GET("/summary", d.Transaction.Summary)
+	tx.GET("/:id", d.Transaction.Get)
+	tx.PUT("/:id", d.Transaction.Update)
+	tx.DELETE("/:id", d.Transaction.Delete)
+
+	bd := auth.Group("/budgets")
+	bd.POST("", d.Budget.Create)
+	bd.GET("", d.Budget.List)
+	bd.GET("/:id", d.Budget.Get)
+	bd.PUT("/:id", d.Budget.Update)
+	bd.DELETE("/:id", d.Budget.Delete)
+
+	sb := auth.Group("/subscriptions")
+	sb.POST("", d.Subscription.Create)
+	sb.GET("", d.Subscription.List)
+	sb.GET("/upcoming", d.Subscription.Upcoming)
+	sb.GET("/:id", d.Subscription.Get)
+	sb.PUT("/:id", d.Subscription.Update)
+	sb.DELETE("/:id", d.Subscription.Delete)
 	return r
 }
