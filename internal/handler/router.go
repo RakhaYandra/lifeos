@@ -18,6 +18,11 @@ type Deps struct {
 	Transaction  *TransactionHandler
 	Budget       *BudgetHandler
 	Subscription *SubscriptionHandler
+	Health       *HealthHandler
+	Learning     *LearningHandler
+	Review       *ReviewHandler
+	Reminder     *ReminderHandler
+	Dashboard    *DashboardHandler
 }
 
 func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
@@ -88,5 +93,42 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	sb.GET("/:id", d.Subscription.Get)
 	sb.PUT("/:id", d.Subscription.Update)
 	sb.DELETE("/:id", d.Subscription.Delete)
+
+	auth.GET("/dashboard", d.Dashboard.Get)
+
+	hl := auth.Group("/health-logs")
+	hl.PUT("", d.Health.PutLog)
+	hl.GET("", d.Health.ListLogs)
+
+	wo := auth.Group("/workouts")
+	wo.POST("", d.Health.CreateWorkout)
+	wo.GET("", d.Health.ListWorkouts)
+
+	ln := auth.Group("/learning")
+	ln.POST("", d.Learning.CreateLearn)
+	ln.GET("", d.Learning.ListLearn)
+	ln.PUT("/:id", d.Learning.UpdateLearn)
+	ln.DELETE("/:id", d.Learning.DeleteLearn)
+
+	rd := auth.Group("/reading")
+	rd.POST("", d.Learning.CreateRead)
+	rd.GET("", d.Learning.ListRead)
+	rd.PUT("/:id", d.Learning.UpdateRead)
+	rd.DELETE("/:id", d.Learning.DeleteRead)
+
+	rv := auth.Group("/reviews")
+	rv.POST("", d.Review.Create)
+	rv.GET("", d.Review.List)
+	rv.GET("/:id", d.Review.Get)
+	rv.PUT("/:id", d.Review.Update)
+	rv.DELETE("/:id", d.Review.Delete)
+
+	rm := auth.Group("/reminders")
+	rm.POST("", d.Reminder.Create)
+	rm.GET("", d.Reminder.List)
+	rm.GET("/upcoming", d.Reminder.Upcoming)
+	rm.GET("/:id", d.Reminder.Get)
+	rm.PUT("/:id", d.Reminder.Update)
+	rm.DELETE("/:id", d.Reminder.Delete)
 	return r
 }

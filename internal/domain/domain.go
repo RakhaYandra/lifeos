@@ -123,3 +123,71 @@ type Subscription struct {
 	DaysUntil     *int
 	Notes         string
 }
+
+type HealthLog struct {
+	ID          int64
+	UserID      int64
+	Date        string
+	Weight      *float64
+	SleepHours  *float64
+	WaterLiters *float64
+	Energy      *int
+	Mood        *int
+	Notes       string
+}
+
+type Workout struct {
+	ID          int64
+	UserID      int64
+	Date        string
+	Type        string
+	DurationMin int
+	Intensity   string
+	Calories    *int
+	Notes       string
+}
+
+type LearningEntry struct {
+	ID           int64
+	UserID       int64
+	Topic        string
+	Type         string
+	Provider     string
+	RelatedSkill string
+	Progress     int
+	Hours        float64
+	Status       string
+	Notes        string
+}
+
+type ReadingEntry struct {
+	ID        int64
+	UserID    int64
+	Title     string
+	Type      string
+	Author    string
+	Status    string
+	Rating    *int
+	Takeaways string
+}
+
+type Review struct {
+	ID         int64
+	UserID     int64
+	WeekStart  string
+	Stats      string
+	Wins       string
+	Challenges string
+	Lessons    string
+	NextFocus  string
+}
+
+type Reminder struct {
+	ID         int64
+	UserID     int64
+	Title      string
+	Date       string
+	Recurrence string
+	DaysUntil  *int
+	Notes      string
+}

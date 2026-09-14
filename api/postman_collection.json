@@ -1,6 +1,6 @@
 {
   "info": {
-    "name": "lifeos P3",
+    "name": "lifeos P4",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -367,6 +367,145 @@
             "value": "Bearer {{token}}"
           }
         ]
+      }
+    },
+    {
+      "name": "dashboard",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/dashboard",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      }
+    },
+    {
+      "name": "put-health",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/v1/health-logs",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"date\":\"2026-09-14\",\"sleep_hours\":7}"
+        }
+      }
+    },
+    {
+      "name": "create-workout",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/workouts",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"date\":\"2026-09-14\",\"type\":\"Lari\",\"duration_min\":30}"
+        }
+      }
+    },
+    {
+      "name": "create-learning",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/learning",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"topic\":\"Go generics\",\"type\":\"course\",\"progress\":40}"
+        }
+      }
+    },
+    {
+      "name": "create-reading",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/reading",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Clean Code\",\"type\":\"book\",\"status\":\"reading\"}"
+        }
+      }
+    },
+    {
+      "name": "create-review",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/reviews",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"week_start\":\"2026-09-08\",\"wins\":\"P1-P3 selesai\"}"
+        }
+      }
+    },
+    {
+      "name": "create-reminder",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/reminders",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Bayar kos\",\"date\":\"2026-10-01\",\"recurrence\":\"monthly\"}"
+        }
       }
     }
   ],

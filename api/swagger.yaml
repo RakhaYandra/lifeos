@@ -541,3 +541,289 @@ paths:
         - { name: id, in: path, required: true, schema: { type: integer } }
       responses:
         "204": { description: deleted }
+  /v1/dashboard:
+    get:
+      summary: Agregat home (tasks, habits, finance, goals, subs, reminders)
+      operationId: dashboard
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: ok }
+  /v1/health-logs:
+    get:
+      summary: List health logs (?from=&to=)
+      operationId: listHealth
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    put:
+      summary: Upsert health log per tanggal
+      operationId: putHealth
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [date]
+              properties:
+                date: { type: string, format: date }
+                weight: { type: number }
+                sleep_hours: { type: number }
+                water_liters: { type: number }
+                energy: { type: integer }
+                mood: { type: integer }
+      responses:
+        "200": { description: ok }
+  /v1/workouts:
+    get:
+      summary: List workouts (?from=&to=)
+      operationId: listWorkouts
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Catat workout
+      operationId: createWorkout
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [date, type]
+              properties:
+                date: { type: string, format: date }
+                type: { type: string, example: Lari }
+                duration_min: { type: integer }
+                intensity: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/learning:
+    get:
+      summary: List learning
+      operationId: listLearn
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah learning
+      operationId: createLearn
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [topic]
+              properties:
+                topic: { type: string }
+                type: { type: string }
+                progress: { type: integer }
+                hours: { type: number }
+      responses:
+        "201": { description: created }
+  /v1/learning/{id}:
+    put:
+      summary: Update learning
+      operationId: updateLearn
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [topic]
+              properties:
+                topic: { type: string }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus learning
+      operationId: deleteLearn
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/reading:
+    get:
+      summary: List reading
+      operationId: listRead
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah reading
+      operationId: createRead
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title: { type: string }
+                type: { type: string }
+                status: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/reading/{id}:
+    put:
+      summary: Update reading
+      operationId: updateRead
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title: { type: string }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus reading
+      operationId: deleteRead
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/reviews:
+    get:
+      summary: List reviews + auto-stat
+      operationId: listReviews
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat review mingguan (stats otomatis)
+      operationId: createReview
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [week_start]
+              properties:
+                week_start: { type: string, format: date }
+                wins: { type: string }
+                next_focus: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/reviews/{id}:
+    get:
+      summary: Detail review
+      operationId: getReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update review (stats hitung ulang)
+      operationId: updateReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [week_start]
+              properties:
+                week_start: { type: string, format: date }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus review
+      operationId: deleteReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/reminders:
+    get:
+      summary: List reminders + next/days_until
+      operationId: listReminders
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Tambah reminder
+      operationId: createReminder
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, date]
+              properties:
+                title: { type: string }
+                date: { type: string, format: date }
+                recurrence: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/reminders/upcoming:
+    get:
+      summary: Reminder dekat (?within_days=14)
+      operationId: remindersUpcoming
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+  /v1/reminders/{id}:
+    get:
+      summary: Detail reminder
+      operationId: getReminder
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update reminder
+      operationId: updateReminder
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, date]
+              properties:
+                title: { type: string }
+                date: { type: string, format: date }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus reminder
+      operationId: deleteReminder
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
