@@ -247,6 +247,30 @@ INSERT INTO monthly_reviews (user_id,period,stats,wins,challenges,lessons,next_f
 INSERT INTO yearly_reviews (user_id,period,stats,wins,challenges,lessons,next_focus,achievements,next_year) VALUES
 (1,'2026','{}','LifeOS MVP live','konsistensi lari','sistem > motivasi','marathon 2027','API + web LifeOS, dana darurat 40%','half marathon + tabungan 20jt');
 
+-- Fase 2C: travel contoh + decision contoh
+INSERT INTO trips (user_id,name,destination,start_date,end_date,budget,status,notes) VALUES
+(1,'Bandung 2 hari','Bandung','2026-10-10','2026-10-11',1500000,'planning','long weekend');
+INSERT INTO itinerary_items (trip_id,date,time,activity,location,cost,booked) VALUES
+(1,'2026-10-10','08:00','Kereta Gambir-Kiaracondang','Gambir',150000,1),
+(1,'2026-10-10','13:00','Kawah Putih','Ciwidey',50000,0),
+(1,'2026-10-11','09:00','Braga + kopi','Braga',80000,0),
+(1,'2026-10-11','16:00','Kereta pulang','Kiaracondang',150000,1);
+INSERT INTO packing_items (trip_id,category,item,qty,packed) VALUES
+(1,'Pakaian','Jaket',1,0),
+(1,'Pakaian','Baju ganti',2,0),
+(1,'Elektronik','Charger + powerbank',1,1),
+(1,'Dokumen','KTP',1,1);
+INSERT INTO decisions (user_id,title,notes) VALUES
+(1,'Pilih laptop baru','ganti 2026'),
+(1,'Liburan akhir tahun','');
+INSERT INTO decision_options (decision_id,name) VALUES
+(1,'ThinkPad X1'),(1,'MacBook Air'),(2,'Bandung'),(2,'Yogya');
+INSERT INTO decision_marks (option_id,criterion,weight,score) VALUES
+(1,'Harga',3,7),(1,'Bobot',2,9),(1,'Linux',3,10),
+(2,'Harga',3,5),(2,'Bobot',2,10),(2,'Linux',3,4),
+(3,'Biaya',3,9),(3,'Jarak',2,9),
+(4,'Biaya',3,7),(4,'Jarak',2,6);
+
 -- Fase 2A: quarterly goals (cascade annual->quarterly) + reparent monthly
 INSERT INTO goals (user_id,level,parent_id,life_area_id,title,metric,target_value,current_value,status,target_date) VALUES
 (1,'quarterly',1,2,'Q3 nabung 6jt','IDR',6000000,2800000,'active','2026-09-30'),

@@ -21,6 +21,8 @@ type Deps struct {
 	Subscription *SubscriptionHandler
 	Monthly      *PeriodReviewHandler
 	Yearly       *PeriodReviewHandler
+	Travel       *TravelHandler
+	Decision     *DecisionHandler
 	Health       *HealthHandler
 	Learning     *LearningHandler
 	Review       *ReviewHandler
@@ -156,5 +158,27 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	yr.GET("/:id", d.Yearly.Get)
 	yr.PUT("/:id", d.Yearly.Update)
 	yr.DELETE("/:id", d.Yearly.Delete)
+
+	tr := auth.Group("/trips")
+	tr.POST("", d.Travel.Create)
+	tr.GET("", d.Travel.List)
+	tr.GET("/:id", d.Travel.Get)
+	tr.PUT("/:id", d.Travel.Update)
+	tr.DELETE("/:id", d.Travel.Delete)
+	tr.POST("/:id/itinerary", d.Travel.AddItin)
+	tr.PUT("/:id/itinerary/:iid", d.Travel.ToggleItin)
+	tr.DELETE("/:id/itinerary/:iid", d.Travel.DeleteItin)
+	tr.POST("/:id/packing", d.Travel.AddPack)
+	tr.PUT("/:id/packing/:pid", d.Travel.TogglePack)
+	tr.DELETE("/:id/packing/:pid", d.Travel.DeletePack)
+
+	dc := auth.Group("/decisions")
+	dc.POST("", d.Decision.Create)
+	dc.GET("", d.Decision.List)
+	dc.GET("/:id", d.Decision.Get)
+	dc.DELETE("/:id", d.Decision.Delete)
+	dc.POST("/:id/options", d.Decision.AddOption)
+	dc.DELETE("/:id/options/:oid", d.Decision.DeleteOption)
+	dc.POST("/:id/options/:oid/marks", d.Decision.Mark)
 	return r
 }

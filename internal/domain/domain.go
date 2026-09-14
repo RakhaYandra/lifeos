@@ -191,3 +191,58 @@ type Reminder struct {
 	DaysUntil  *int
 	Notes      string
 }
+
+type Trip struct {
+	ID          int64
+	UserID      int64
+	Name        string
+	Destination string
+	StartDate   string
+	EndDate     string
+	Budget      float64
+	ActualCost  float64
+	Status      string
+	Notes       string
+}
+
+type ItineraryItem struct {
+	ID       int64
+	TripID   int64
+	Date     string
+	Time     string
+	Activity string
+	Location string
+	Cost     float64
+	Booked   bool
+}
+
+type PackingItem struct {
+	ID       int64
+	TripID   int64
+	Category string
+	Item     string
+	Qty      int
+	Packed   bool
+}
+
+type Decision struct {
+	ID      int64
+	UserID  int64
+	Title   string
+	Notes   string
+	Options []DecisionOption
+}
+
+type DecisionOption struct {
+	ID    int64
+	Name  string
+	Marks []DecisionMark
+	Total float64
+	Rank  int
+}
+
+type DecisionMark struct {
+	Criterion string
+	Weight    float64
+	Score     float64
+}

@@ -958,6 +958,187 @@ paths:
         - { name: id, in: path, required: true, schema: { type: integer } }
       responses:
         "204": { description: deleted }
+  /v1/trips:
+    get:
+      summary: List trips + actual_cost
+      operationId: listTrips
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat trip
+      operationId: createTrip
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, start_date, end_date]
+              properties:
+                name: { type: string, example: Bandung 2 hari }
+                destination: { type: string }
+                start_date: { type: string, format: date }
+                end_date: { type: string, format: date }
+                budget: { type: number }
+      responses:
+        "201": { description: created }
+  /v1/trips/{id}:
+    get:
+      summary: Detail trip + itinerary + packing
+      operationId: getTrip
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update trip
+      operationId: updateTrip
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, start_date, end_date]
+              properties:
+                name: { type: string }
+                start_date: { type: string, format: date }
+                end_date: { type: string, format: date }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus trip
+      operationId: deleteTrip
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/trips/{id}/itinerary:
+    post:
+      summary: Tambah itinerary
+      operationId: addItinerary
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [date, activity]
+              properties:
+                date: { type: string, format: date }
+                activity: { type: string }
+                cost: { type: number }
+      responses:
+        "201": { description: created }
+  /v1/trips/{id}/packing:
+    post:
+      summary: Tambah packing
+      operationId: addPacking
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [item]
+              properties:
+                item: { type: string }
+                qty: { type: integer }
+      responses:
+        "201": { description: created }
+  /v1/decisions:
+    get:
+      summary: List decisions + ranking terbobot
+      operationId: listDecisions
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat decision
+      operationId: createDecision
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title]
+              properties:
+                title: { type: string, example: Pilih laptop }
+      responses:
+        "201": { description: created }
+  /v1/decisions/{id}:
+    get:
+      summary: Detail + ranking
+      operationId: getDecision
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    delete:
+      summary: Hapus decision
+      operationId: deleteDecision
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/decisions/{id}/options:
+    post:
+      summary: Tambah opsi
+      operationId: addOption
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/decisions/{id}/options/{oid}/marks:
+    post:
+      summary: Nilai opsi (upsert per kriteria, rekomendasi dari ranking)
+      operationId: markOption
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+        - { name: oid, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [criterion, score]
+              properties:
+                criterion: { type: string }
+                weight: { type: number }
+                score: { type: number }
+      responses:
+        "200": { description: ok }
   /v1/reminders:
     get:
       summary: List reminders + next/days_until
