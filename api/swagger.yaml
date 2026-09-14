@@ -1,0 +1,96 @@
+openapi: 3.0.3
+info:
+  title: lifeos API
+  description: Personal Life OS — Go/Gin + SQLite + JWT, single-user lokal.
+  version: 0.1.0
+servers:
+  - url: http://localhost:8080
+    description: lokal
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Creds:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email, example: aku@lifeos.local }
+        password: { type: string, example: Rahasia123 }
+    Settings:
+      type: object
+      required: [active_year, currency]
+      properties:
+        active_year: { type: integer, example: 2026 }
+        currency: { type: string, example: IDR }
+        budget_warn_pct: { type: integer, example: 80 }
+        goal_warn_pct: { type: integer, example: 70 }
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+security: []
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      operationId: health
+      responses:
+        "200": { description: ok }
+  /v1/auth/register:
+    post:
+      summary: Daftar akun pertama saja (single-user)
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/Creds" } }
+      responses:
+        "201": { description: created }
+        "403": { description: single_user_only }
+        "409": { description: email_taken }
+  /v1/auth/login:
+    post:
+      summary: Login, dapat JWT 24 jam
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/Creds" } }
+      responses:
+        "200": { description: token }
+        "401": { description: invalid_credentials }
+  /v1/me:
+    get:
+      summary: Profil sendiri
+      operationId: me
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: profil }
+        "401": { description: unauthorized }
+  /v1/settings:
+    get:
+      summary: Ambil settings
+      operationId: getSettings
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: settings, content: { application/json: { schema: { $ref: "#/components/schemas/Settings" } } } }
+    put:
+      summary: Update settings
+      operationId: putSettings
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json: { schema: { $ref: "#/components/schemas/Settings" } }
+      responses:
+        "200": { description: ok }
+  /v1/life-areas:
+    get:
+      summary: Daftar 8 life areas
+      operationId: listLifeAreas
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }

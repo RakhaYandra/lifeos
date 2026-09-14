@@ -1,0 +1,30 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    env:
+      DB_PATH: /tmp/lifeos-ci.db
+      JWT_SECRET: ci-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: "1.27", cache: true }
+      - run: go vet ./...
+      - uses: golangci/golangci-lint-action@v8
+        with: { version: latest }
+      - run: go test ./... -coverprofile=cover.out
+      - name: coverage service >= 60%
+        run: |
+          PCT=$(go tool cover -func=cover.out | grep 'internal/service' | awk '{s+=$3} END {print s/NR}' | tr -d '%')
+          echo "service coverage: $PCT%"; test "${PCT%.*}" -ge 60
+      - run: go install github.com/pressly/goose/v3/cmd/goose@v3.28.0
+      - run: rm -f /tmp/lifeos-ci.db && goose -dir migrations sqlite /tmp/lifeos-ci.db up
+      - run: sqlite3 /tmp/lifeos-ci.db < seed/seed.sql
+      - run: go build -o /tmp/lifeos ./cmd/api
+      - run: |
+          PORT=8080 JWT_SECRET=ci-secret DB_PATH=/tmp/lifeos-ci.db /tmp/lifeos &
+          for i in $(seq 1 20); do curl -sf http://localhost:8080/healthz && break || sleep 3; done
+          curl -sf http://localhost:8080/healthz
+      - run: npx --yes newman run api/postman_collection.json --env-var baseUrl=http://localhost:8080
+      - run: npx --yes @apidevtools/swagger-cli validate api/swagger.yaml

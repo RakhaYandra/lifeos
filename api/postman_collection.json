@@ -1,0 +1,12 @@
+{
+  "info": { "name": "lifeos P0", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json" },
+  "item": [
+    { "name": "healthz", "request": { "method": "GET", "url": "{{baseUrl}}/healthz" } },
+    { "name": "register", "request": { "method": "POST", "url": "{{baseUrl}}/v1/auth/register", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}" } } },
+    { "name": "login", "request": { "method": "POST", "url": "{{baseUrl}}/v1/auth/login", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"aku@lifeos.local\",\"password\":\"Rahasia123\"}" } } },
+    { "name": "me", "request": { "method": "GET", "url": "{{baseUrl}}/v1/me", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
+    { "name": "get-settings", "request": { "method": "GET", "url": "{{baseUrl}}/v1/settings", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } },
+    { "name": "list-life-areas", "request": { "method": "GET", "url": "{{baseUrl}}/v1/life-areas", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }] } }
+  ],
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080" }, { "key": "token", "value": "" }]
+}
