@@ -839,6 +839,125 @@ paths:
         - { name: id, in: path, required: true, schema: { type: integer } }
       responses:
         "204": { description: deleted }
+  /v1/monthly-reviews:
+    get:
+      summary: List review bulanan + auto-stat
+      operationId: listMonthlyReviews
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat review bulanan (period YYYY-MM, stats otomatis)
+      operationId: createMonthlyReview
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [period]
+              properties:
+                period: { type: string, example: "2026-09" }
+                wins: { type: string }
+                next_focus: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/monthly-reviews/{id}:
+    get:
+      summary: Detail review bulanan
+      operationId: getMonthlyReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update review bulanan (stats hitung ulang)
+      operationId: updateMonthlyReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [period]
+              properties:
+                period: { type: string, example: "2026-09" }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus review bulanan
+      operationId: deleteMonthlyReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/yearly-reviews:
+    get:
+      summary: List review tahunan + auto-stat
+      operationId: listYearlyReviews
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat review tahunan (period YYYY, stats otomatis)
+      operationId: createYearlyReview
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [period]
+              properties:
+                period: { type: string, example: "2026" }
+                wins: { type: string }
+                achievements: { type: string }
+                next_year: { type: string }
+      responses:
+        "201": { description: created }
+  /v1/yearly-reviews/{id}:
+    get:
+      summary: Detail review tahunan
+      operationId: getYearlyReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update review tahunan (stats hitung ulang)
+      operationId: updateYearlyReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [period]
+              properties:
+                period: { type: string, example: "2026" }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus review tahunan
+      operationId: deleteYearlyReview
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
   /v1/reminders:
     get:
       summary: List reminders + next/days_until

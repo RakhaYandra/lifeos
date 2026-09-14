@@ -118,6 +118,15 @@ func (r *TransactionRepository) MonthSummary(userID int64, year, month int) (inc
 	return income, expense, err
 }
 
+// YearSummary: income & expense per tahun.
+func (r *TransactionRepository) YearSummary(userID int64, year int) (income, expense float64, err error) {
+	err = r.DB.QueryRow(`SELECT COALESCE(SUM(CASE WHEN type='income' THEN amount ELSE 0 END),0),
+		COALESCE(SUM(CASE WHEN type='expense' THEN amount ELSE 0 END),0) FROM transactions
+		WHERE user_id=? AND strftime('%Y',date)=?`,
+		userID, pad4(year)).Scan(&income, &expense)
+	return income, expense, err
+}
+
 func pad4(n int) string {
 	if n < 10 {
 		return "000" + itoa(n)

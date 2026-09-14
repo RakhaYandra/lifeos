@@ -240,6 +240,13 @@ INSERT INTO reminders (user_id,title,date,recurrence,notes) VALUES
 (1,'Kontrol gigi','2026-09-22','none',''),
 (1,'Long run 10K','2026-09-14','weekly','');
 
+-- Fase 2B: monthly + yearly reviews (stats dihitung API saat create)
+INSERT INTO monthly_reviews (user_id,period,stats,wins,challenges,lessons,next_focus) VALUES
+(1,'2026-08','{}','Gaji aman, lari mulai rutin','kurang catat trx','catat harian lebih gampang','nabung 2jt September'),
+(1,'2026-09','{}','API LifeOS P1-P6 selesai','long run kelewat 1x','tidur <7 jam bikin lesu','long run 10K + P7');
+INSERT INTO yearly_reviews (user_id,period,stats,wins,challenges,lessons,next_focus,achievements,next_year) VALUES
+(1,'2026','{}','LifeOS MVP live','konsistensi lari','sistem > motivasi','marathon 2027','API + web LifeOS, dana darurat 40%','half marathon + tabungan 20jt');
+
 -- Fase 2A: quarterly goals (cascade annual->quarterly) + reparent monthly
 INSERT INTO goals (user_id,level,parent_id,life_area_id,title,metric,target_value,current_value,status,target_date) VALUES
 (1,'quarterly',1,2,'Q3 nabung 6jt','IDR',6000000,2800000,'active','2026-09-30'),

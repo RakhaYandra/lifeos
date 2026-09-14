@@ -34,6 +34,8 @@ func main() {
 	reads := &repository.ReadingRepository{DB: db}
 	reviews := &repository.ReviewRepository{DB: db}
 	reminds := &repository.ReminderRepository{DB: db}
+	monthly := &repository.PeriodReviewRepository{DB: db, Table: "monthly_reviews"}
+	yearly := &repository.PeriodReviewRepository{DB: db, Table: "yearly_reviews", Extras: []string{"achievements", "next_year"}}
 
 	authH := &handler.AuthHandler{
 		Svc:      &service.AuthService{Users: users, Secret: cfg.JWTSecret},
@@ -54,9 +56,11 @@ func main() {
 	learnH := &handler.LearningHandler{Learning: learns, Reading: reads}
 	reviewH := &handler.ReviewHandler{Reviews: reviews, Tasks: tasks, Trx: trx, Habits: habits}
 	remindH := &handler.ReminderHandler{Reminders: reminds}
+	monthlyH := &handler.PeriodReviewHandler{Reviews: monthly, Tasks: tasks, Trx: trx, Habits: habits, Goals: goals, Kind: "monthly"}
+	yearlyH := &handler.PeriodReviewHandler{Reviews: yearly, Tasks: tasks, Trx: trx, Habits: habits, Goals: goals, Kind: "yearly"}
 	dashH := &handler.DashboardHandler{Tasks: tasks, Habits: habits, Trx: trx, Goals: goals, Subs: subs, Reminds: reminds}
 
-	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH, Goal: goalH, Milestone: msH, Habit: habitH, Transaction: trxH, Budget: budH, Subscription: subH, Health: healthH, Learning: learnH, Review: reviewH, Reminder: remindH, Dashboard: dashH}, cfg.JWTSecret, cfg.FrontendURL)
+	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH, Goal: goalH, Milestone: msH, Habit: habitH, Transaction: trxH, Budget: budH, Subscription: subH, Health: healthH, Learning: learnH, Review: reviewH, Reminder: remindH, Monthly: monthlyH, Yearly: yearlyH, Dashboard: dashH}, cfg.JWTSecret, cfg.FrontendURL)
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatal(err)
 	}

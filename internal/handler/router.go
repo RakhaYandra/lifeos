@@ -19,6 +19,8 @@ type Deps struct {
 	Transaction  *TransactionHandler
 	Budget       *BudgetHandler
 	Subscription *SubscriptionHandler
+	Monthly      *PeriodReviewHandler
+	Yearly       *PeriodReviewHandler
 	Health       *HealthHandler
 	Learning     *LearningHandler
 	Review       *ReviewHandler
@@ -140,5 +142,19 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	rm.GET("/:id", d.Reminder.Get)
 	rm.PUT("/:id", d.Reminder.Update)
 	rm.DELETE("/:id", d.Reminder.Delete)
+
+	mr := auth.Group("/monthly-reviews")
+	mr.POST("", d.Monthly.Create)
+	mr.GET("", d.Monthly.List)
+	mr.GET("/:id", d.Monthly.Get)
+	mr.PUT("/:id", d.Monthly.Update)
+	mr.DELETE("/:id", d.Monthly.Delete)
+
+	yr := auth.Group("/yearly-reviews")
+	yr.POST("", d.Yearly.Create)
+	yr.GET("", d.Yearly.List)
+	yr.GET("/:id", d.Yearly.Get)
+	yr.PUT("/:id", d.Yearly.Update)
+	yr.DELETE("/:id", d.Yearly.Delete)
 	return r
 }
