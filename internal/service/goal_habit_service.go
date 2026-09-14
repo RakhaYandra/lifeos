@@ -2,7 +2,7 @@ package service
 
 import "time"
 
-var validGoalLevel = map[string]bool{"annual": true, "monthly": true}
+var validGoalLevel = map[string]bool{"annual": true, "quarterly": true, "monthly": true}
 
 var validGoalStatus = map[string]bool{
 	"not_started": true, "active": true, "on_track": true,
@@ -14,6 +14,22 @@ var validHabitFreq = map[string]bool{"daily": true, "weekly": true}
 func ValidGoalLevel(s string) bool  { return validGoalLevel[s] }
 func ValidGoalStatus(s string) bool { return validGoalStatus[s] }
 func ValidHabitFreq(s string) bool  { return validHabitFreq[s] }
+
+// ValidGoalParent: cascade annual→quarterly→monthly.
+// quarterly wajib berparent annual; monthly boleh quarterly/annual;
+// annual tak berparent. parentLevel "" = tanpa parent.
+func ValidGoalParent(level, parentLevel string) bool {
+	switch level {
+	case "annual":
+		return parentLevel == ""
+	case "quarterly":
+		return parentLevel == "annual"
+	case "monthly":
+		return parentLevel == "" || parentLevel == "quarterly" || parentLevel == "annual"
+	default:
+		return false
+	}
+}
 
 // GoalProgress: current/target*100, cap 0-100. target<=0 → 0 bila current<=0, else 100 bila current>0.
 func GoalProgress(target, current float64) int {

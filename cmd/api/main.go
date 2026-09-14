@@ -24,6 +24,7 @@ func main() {
 	tasks := &repository.TaskRepository{DB: db}
 	goals := &repository.GoalRepository{DB: db}
 	habits := &repository.HabitRepository{DB: db}
+	milestones := &repository.MilestoneRepository{DB: db}
 	trx := &repository.TransactionRepository{DB: db}
 	budgets := &repository.BudgetRepository{DB: db}
 	subs := &repository.SubscriptionRepository{DB: db}
@@ -45,6 +46,7 @@ func main() {
 	taskH := &handler.TaskHandler{Tasks: tasks}
 	goalH := &handler.GoalHandler{Goals: goals}
 	habitH := &handler.HabitHandler{Habits: habits}
+	msH := &handler.MilestoneHandler{Milestones: milestones}
 	trxH := &handler.TransactionHandler{Trx: trx}
 	budH := &handler.BudgetHandler{Budgets: budgets, Trx: trx, Settings: settings}
 	subH := &handler.SubscriptionHandler{Subs: subs}
@@ -54,7 +56,7 @@ func main() {
 	remindH := &handler.ReminderHandler{Reminders: reminds}
 	dashH := &handler.DashboardHandler{Tasks: tasks, Habits: habits, Trx: trx, Goals: goals, Subs: subs, Reminds: reminds}
 
-	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH, Goal: goalH, Habit: habitH, Transaction: trxH, Budget: budH, Subscription: subH, Health: healthH, Learning: learnH, Review: reviewH, Reminder: remindH, Dashboard: dashH}, cfg.JWTSecret, cfg.FrontendURL)
+	r := handler.NewRouter(&handler.Deps{Auth: authH, Settings: setH, LifeArea: areaH, Project: projH, Task: taskH, Goal: goalH, Milestone: msH, Habit: habitH, Transaction: trxH, Budget: budH, Subscription: subH, Health: healthH, Learning: learnH, Review: reviewH, Reminder: remindH, Dashboard: dashH}, cfg.JWTSecret, cfg.FrontendURL)
 	if err := r.Run(":" + cfg.Port); err != nil {
 		log.Fatal(err)
 	}

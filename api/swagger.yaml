@@ -55,7 +55,7 @@ components:
       required: [title]
       properties:
         title: { type: string, example: Dana darurat 20jt }
-        level: { type: string, example: annual }
+        level: { type: string, example: quarterly, enum: [annual, quarterly, monthly] }
         parent_id: { type: integer }
         metric: { type: string, example: IDR }
         target_value: { type: number, example: 20000000 }
@@ -269,7 +269,7 @@ paths:
         "204": { description: deleted }
   /v1/goals:
     get:
-      summary: List goals (?level=annual|monthly, progress cap 0-100)
+      summary: List goals (?level=annual|quarterly|monthly, cascade parent)
       operationId: listGoals
       security: [{ bearerAuth: [] }]
       responses:
@@ -309,6 +309,75 @@ paths:
     delete:
       summary: Hapus goal
       operationId: deleteGoal
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "204": { description: deleted }
+  /v1/milestones:
+    get:
+      summary: List milestones + overdue (?goal_id=&project_id=)
+      operationId: listMilestones
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+    post:
+      summary: Buat milestone
+      operationId: createMilestone
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, target_date]
+              properties:
+                title: { type: string, example: Long run 10K }
+                goal_id: { type: integer }
+                project_id: { type: integer }
+                target_date: { type: string, format: date }
+                status: { type: string, example: pending }
+      responses:
+        "201": { description: created }
+  /v1/milestones/upcoming:
+    get:
+      summary: Milestone dekat (?within_days=14)
+      operationId: milestonesUpcoming
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: list }
+  /v1/milestones/{id}:
+    get:
+      summary: Detail milestone
+      operationId: getMilestone
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      responses:
+        "200": { description: ok }
+        "404": { description: not_found }
+    put:
+      summary: Update milestone (completed auto-stamp)
+      operationId: updateMilestone
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, target_date]
+              properties:
+                title: { type: string, example: Long run 10K }
+                target_date: { type: string, format: date }
+      responses:
+        "200": { description: ok }
+    delete:
+      summary: Hapus milestone
+      operationId: deleteMilestone
       security: [{ bearerAuth: [] }]
       parameters:
         - { name: id, in: path, required: true, schema: { type: integer } }

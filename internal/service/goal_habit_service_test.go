@@ -53,3 +53,30 @@ func TestWeeklyStreak(t *testing.T) {
 		t.Fatal("kosong mau 0")
 	}
 }
+
+func TestValidGoalParent(t *testing.T) {
+	if !ValidGoalParent("annual", "") {
+		t.Fatal("annual tanpa parent ok")
+	}
+	if ValidGoalParent("annual", "annual") {
+		t.Fatal("annual berparent tolak")
+	}
+	if !ValidGoalParent("quarterly", "annual") {
+		t.Fatal("quarterly<-annual ok")
+	}
+	if ValidGoalParent("quarterly", "quarterly") {
+		t.Fatal("quarterly<-quarterly tolak")
+	}
+	if ValidGoalParent("quarterly", "") {
+		t.Fatal("quarterly tanpa parent tolak")
+	}
+	if !ValidGoalParent("monthly", "quarterly") {
+		t.Fatal("monthly<-quarterly ok")
+	}
+	if !ValidGoalParent("monthly", "annual") {
+		t.Fatal("monthly<-annual ok (seed lama)")
+	}
+	if ValidGoalParent("monthly", "monthly") {
+		t.Fatal("monthly<-monthly tolak")
+	}
+}

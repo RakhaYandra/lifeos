@@ -14,6 +14,7 @@ type Deps struct {
 	Project      *ProjectHandler
 	Task         *TaskHandler
 	Goal         *GoalHandler
+	Milestone    *MilestoneHandler
 	Habit        *HabitHandler
 	Transaction  *TransactionHandler
 	Budget       *BudgetHandler
@@ -61,6 +62,14 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	gl.GET("/:id", d.Goal.Get)
 	gl.PUT("/:id", d.Goal.Update)
 	gl.DELETE("/:id", d.Goal.Delete)
+
+	ms := auth.Group("/milestones")
+	ms.POST("", d.Milestone.Create)
+	ms.GET("", d.Milestone.List)
+	ms.GET("/upcoming", d.Milestone.Upcoming)
+	ms.GET("/:id", d.Milestone.Get)
+	ms.PUT("/:id", d.Milestone.Update)
+	ms.DELETE("/:id", d.Milestone.Delete)
 
 	hb := auth.Group("/habits")
 	hb.POST("", d.Habit.Create)

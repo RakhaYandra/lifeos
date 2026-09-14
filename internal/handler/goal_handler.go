@@ -53,6 +53,20 @@ func toGoalRow(userID int64, in goalIn) (*repository.GoalRow, error) {
 	return g, nil
 }
 
+func (h *GoalHandler) checkParent(uid int64, g *repository.GoalRow) bool {
+	if !g.ParentID.Valid {
+		return service.ValidGoalParent(g.Level, "")
+	}
+	p, err := h.Goals.Get(uid, g.ParentID.Int64)
+	if err != nil {
+		return false
+	}
+	if p.UserID != uid {
+		return false
+	}
+	return service.ValidGoalParent(g.Level, p.Level)
+}
+
 func goalOut(g *repository.GoalRow) gin.H {
 	out := gin.H{"id": g.ID, "level": g.Level, "title": g.Title, "metric": g.Metric,
 		"target_value": g.TargetValue, "current_value": g.CurrentValue,
@@ -79,6 +93,10 @@ func (h *GoalHandler) Create(c *gin.Context) {
 	g, err := toGoalRow(uid.(int64), in)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid"})
+		return
+	}
+	if !h.checkParent(uid.(int64), g) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid_parent"})
 		return
 	}
 	id, err := h.Goals.Create(g)
@@ -142,6 +160,10 @@ func (h *GoalHandler) Update(c *gin.Context) {
 	g, err := toGoalRow(uid.(int64), in)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid"})
+		return
+	}
+	if !h.checkParent(uid.(int64), g) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid_parent"})
 		return
 	}
 	g.ID = cur.ID

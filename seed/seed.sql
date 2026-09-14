@@ -239,3 +239,20 @@ INSERT INTO reminders (user_id,title,date,recurrence,notes) VALUES
 (1,'Pajak motor','2027-02-15','yearly',''),
 (1,'Kontrol gigi','2026-09-22','none',''),
 (1,'Long run 10K','2026-09-14','weekly','');
+
+-- Fase 2A: quarterly goals (cascade annual->quarterly) + reparent monthly
+INSERT INTO goals (user_id,level,parent_id,life_area_id,title,metric,target_value,current_value,status,target_date) VALUES
+(1,'quarterly',1,2,'Q3 nabung 6jt','IDR',6000000,2800000,'active','2026-09-30'),
+(1,'quarterly',2,3,'Q3 base 60km','km',60,42,'on_track','2026-09-30'),
+(1,'quarterly',3,4,'Q3 Go 6 modul','modul',6,3,'active','2026-09-30');
+UPDATE goals SET parent_id=8 WHERE id=5;
+UPDATE goals SET parent_id=9 WHERE id=6;
+UPDATE goals SET parent_id=10 WHERE id=7;
+
+-- Milestones (1 overdue contoh: 2026-09-09)
+INSERT INTO milestones (user_id,goal_id,project_id,title,target_date,status,completed_at,notes) VALUES
+(1,9,3,'Long run 8K tembus','2026-09-09','pending',NULL,''),
+(1,9,3,'Long run 10K','2026-09-14','pending',NULL,''),
+(1,8,NULL,'Transfer 800rb pekan 2','2026-09-15','pending',NULL,''),
+(1,10,2,'Heatmap 30 hari live','2026-09-14','completed','2026-09-14',''),
+(1,NULL,1,'Kamar selesai dicat','2026-09-20','pending',NULL,'');

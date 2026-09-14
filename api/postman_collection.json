@@ -476,6 +476,201 @@
       ]
     },
     {
+      "name": "create quarterly",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/goals",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"Q4 probe\",\"level\":\"quarterly\",\"parent_id\":1}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('qId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "quarterly bad parent",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/goals",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"x\",\"level\":\"quarterly\",\"parent_id\":5}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('400',()=>pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "delete quarterly",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/goals/{{qId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "create milestone",
+      "request": {
+        "method": "POST",
+        "url": "{{baseUrl}}/v1/milestones",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"probe\",\"target_date\":\"2026-09-30\",\"goal_id\":9}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('201',()=>pm.response.to.have.status(201));",
+              "pm.collectionVariables.set('msId',pm.response.json().id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "milestones upcoming",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/v1/milestones/upcoming",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "complete milestone",
+      "request": {
+        "method": "PUT",
+        "url": "{{baseUrl}}/v1/milestones/{{msId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"probe\",\"target_date\":\"2026-09-30\",\"status\":\"completed\"}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('200',()=>pm.response.to.have.status(200));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "delete milestone",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/v1/milestones/{{msId}}",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ]
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('204',()=>pm.response.to.have.status(204));"
+            ]
+          }
+        }
+      ]
+    },
+    {
       "name": "list habits",
       "request": {
         "method": "GET",
