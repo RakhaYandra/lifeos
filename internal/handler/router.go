@@ -11,6 +11,8 @@ type Deps struct {
 	Auth     *AuthHandler
 	Settings *SettingsHandler
 	LifeArea *LifeAreaHandler
+	Project  *ProjectHandler
+	Task     *TaskHandler
 }
 
 func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
@@ -26,5 +28,21 @@ func NewRouter(d *Deps, secret, frontendURL string) *gin.Engine {
 	auth.GET("/settings", d.Settings.Get)
 	auth.PUT("/settings", d.Settings.Put)
 	auth.GET("/life-areas", d.LifeArea.List)
+
+	pr := auth.Group("/projects")
+	pr.POST("", d.Project.Create)
+	pr.GET("", d.Project.List)
+	pr.GET("/:id", d.Project.Get)
+	pr.PUT("/:id", d.Project.Update)
+	pr.DELETE("/:id", d.Project.Delete)
+
+	tk := auth.Group("/tasks")
+	tk.POST("", d.Task.Create)
+	tk.GET("", d.Task.List)
+	tk.GET("/today", d.Task.Today)
+	tk.GET("/week", d.Task.Week)
+	tk.GET("/:id", d.Task.Get)
+	tk.PUT("/:id", d.Task.Update)
+	tk.DELETE("/:id", d.Task.Delete)
 	return r
 }
