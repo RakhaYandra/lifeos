@@ -4,6 +4,53 @@ Personal Life OS — **Go/Gin + SQLite + JWT, single-user lokal**.
 `database/sql` tanpa ORM, migrasi goose. Reuse pola shiftbase, tanpa Docker/MySQL.
 Dashboard web: [`lifeos-web`](https://github.com/RakhaYandra/lifeos-web) (Vite+React+TS, identitas Nexus).
 
+## Purpose, Output & Expectations
+
+**Purpose.** Personal productivity is scattered across notes apps,
+spreadsheets, and memory: tasks, habits, money, health, and goals never meet.
+LifeOS unifies them in one local-first system with a single SQLite file —
+no cloud, no subscription, full ownership of personal data.
+
+**Output.** A single-user REST API (`:8080`) covering the full MVP loop
+(tasks → habits → goals → finance → reviews) plus Fase 2 depth (quarterly
+goals, milestones, period reviews, travel, decisions, savings, assets,
+contacts), with a one-call `/dashboard` aggregate, Swagger + Postman/Newman
+contracts (75 checks), and Indonesian fictional seed across every table.
+
+**Expectations.** After running + seeding: the dashboard is alive on first
+login (due/overdue tasks, streaks, monthly cashflow, active goals); every KPI
+traces back to seed rows; the web app is usable daily without touching Excel.
+
+## Features
+
+| Feature | Description |
+|---|---|
+| Auth + Settings | - Single-user register (first account only), JWT login, per-user settings. - Purpose: private local app with one owner. Output: token + active-year/currency/thresholds. |
+| Tasks + Projects | - Inbox capture, statuses, priorities, due dates; overdue/days-remaining computed; project progress from tasks; today/week views. - Purpose: capture → do → done loop. Output: what is due, overdue, and done. |
+| Goals + Milestones | - Annual → quarterly → monthly cascade with parent validation; progress capped 0–100; milestones with overdue flags. - Purpose: break yearly ambitions into monthly execution. Output: progress % per level. |
+| Habits | - Daily/weekly check-ins, streaks, 30-day heatmap via log history. - Purpose: consistency made visible. Output: streaks and heatmaps. |
+| Finance | - Transactions, budgets with auto-computed actuals (safe/warning/over), subscriptions with renewal reminders, savings goals with ETA. - Purpose: know where money goes. Output: cashflow, utilization, renewals. |
+| Health + Learning | - Health logs (upsert per date), workouts, learning progress, reading log with ratings. - Purpose: body and skills tracked next to work. Output: trends and progress. |
+| Reviews + Reminders | - Weekly/monthly/yearly reviews with auto-computed stats + manual reflection; recurring reminders with next-occurrence math. - Purpose: reflect on evidence, never miss dates. Output: stats + reflections. |
+| Dashboard | - One call aggregating tasks, habits, finance, goals, subscriptions, reminders. - Purpose: the app's face. Output: today's whole life in one JSON. |
+| Travel + Decisions | - Trips with itinerary/packing/cost rollup; weighted decision matrix with ranking. - Purpose: plan trips and hard choices with numbers. Output: actual cost, ranked recommendation. |
+| Assets + Contacts | - Asset inventory with warranty flags, wishlist progress, documents with expiry alerts, lightweight relationship CRM with follow-up due. - Purpose: stuff and people, managed. Output: what expires, who to contact. |
+
+## How It Works
+
+```mermaid
+flowchart TD
+    C[Client / lifeos-web] --> A[POST /v1/auth/login]
+    A --> T[JWT 24h, single user]
+    T --> M[Modules: tasks, goals, habits, finance, health, reviews...]
+    M --> DB[(SQLite: lifeos.db)]
+    M --> D[GET /dashboard]
+    D --> K[KPI cards: due/overdue, streaks, net cashflow, goals]
+    T2[Transactions] --> B[Budgets: actual = SUM]
+    H[Habit logs] --> S[Streaks + heatmap]
+    G[Goals monthly] --> P[Projects] --> TK[Tasks]
+```
+
 ## Quickstart 5 menit
 
 ```bash
