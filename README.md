@@ -1,5 +1,9 @@
 # lifeos
 
+[![ci](https://github.com/RakhaYandra/lifeos/actions/workflows/ci.yml/badge.svg)](https://github.com/RakhaYandra/lifeos/actions)
+
+> Ekosistem: [api](https://github.com/RakhaYandra/lifeos) · [web](https://github.com/RakhaYandra/lifeos-web) · [docs](https://github.com/RakhaYandra/lifeos-docs/releases) · [qa](https://github.com/RakhaYandra/lifeos-qa) · [data](https://github.com/RakhaYandra/lifeos-data) · [ops](https://github.com/RakhaYandra/lifeos-ops)
+
 Personal Life OS — **Go/Gin + SQLite + JWT, single-user lokal**.
 `database/sql` tanpa ORM, migrasi goose. Reuse pola shiftbase, tanpa Docker/MySQL.
 Dashboard web: [`lifeos-web`](https://github.com/RakhaYandra/lifeos-web) (Vite+React+TS, identitas Nexus).
