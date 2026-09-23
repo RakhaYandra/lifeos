@@ -101,10 +101,10 @@ PUT = full replace (field tak dikirim = dihapus). Kontrak: `api/swagger.yaml`, `
 ```bash
 go build ./... && go vet ./... && gofmt -l .
 go test ./... -cover            # service ≥ 60% (saat ini ~80%)
-npx newman run api/postman_collection.json --env-var baseUrl=http://localhost:8080  # 41 cek
+npx newman run api/postman_collection.json --env-var baseUrl=http://localhost:8080  # 75 cek
 ```
 
-CI (`.github/workflows/ci.yml`): vet → lint → test+coverage gate → goose migrate sqlite → seed → boot → **Newman (41)** → swagger validate.
+CI (`.github/workflows/ci.yml`): vet → lint → test+coverage gate → goose migrate sqlite → seed → boot → **Newman (75/75)** → swagger validate.
 
 Struktur: `cmd/api/main.go`, `internal/{config,domain,repository,service,handler,middleware}`,
 `migrations/` (goose sqlite, 9 file), `seed/seed.sql`, `api/{swagger.yaml,postman_collection.json}`.
