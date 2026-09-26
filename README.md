@@ -59,7 +59,9 @@ flowchart TD
 
 ```bash
 git clone https://github.com/RakhaYandra/lifeos.git && cd lifeos
-cp .env.example .env                     # ganti JWT_SECRET di prod
+# JWT_SECRET wajib (min 32 karakter). Kode Go membaca process env langsung —
+# file .env tidak otomatis di-load, jadi export manual.
+export JWT_SECRET="$(openssl rand -hex 32)"
 go install github.com/pressly/goose/v3/cmd/goose@v3.28.0
 rm -f lifeos.db
 goose -dir migrations sqlite lifeos.db up

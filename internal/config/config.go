@@ -1,6 +1,14 @@
 package config
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
+
+// MinJWTSecretBytes adalah panjang minimum kunci HS256. HMAC-SHA256 memakai
+// kunci 256-bit; kunci yang lebih pendek diperpanjang secara implisit dan
+// lemah. 32 byte = 32 karakter ASCII.
+const MinJWTSecretBytes = 32
 
 type Config struct {
 	Port        string
@@ -16,11 +24,23 @@ func getenv(k, def string) string {
 	return def
 }
 
-func Load() Config {
-	return Config{
+// Load mengembalikan error kalau JWT_SECRET tidak diisi. Sengaja tidak ada
+// default: kunci yang tertanam di repo berarti siapa pun yang membacanya
+// bisa men forging token untuk semua akun.
+func Load() (Config, error) {
+	cfg := Config{
 		Port:        getenv("PORT", "8080"),
 		DBPath:      getenv("DB_PATH", "lifeos.db"),
-		JWTSecret:   getenv("JWT_SECRET", "dev-secret-ganti-di-prod"),
+		JWTSecret:   os.Getenv("JWT_SECRET"),
 		FrontendURL: getenv("FRONTEND_URL", "http://localhost:5173"),
 	}
+
+	if cfg.JWTSecret == "" {
+		return cfg, fmt.Errorf("JWT_SECRET wajib diisi (minimal %d karakter, mis. openssl rand -hex 32)", MinJWTSecretBytes)
+	}
+	if len(cfg.JWTSecret) < MinJWTSecretBytes {
+		return cfg, fmt.Errorf("JWT_SECRET terlalu pendek: %d byte, minimal %d", len(cfg.JWTSecret), MinJWTSecretBytes)
+	}
+
+	return cfg, nil
 }
