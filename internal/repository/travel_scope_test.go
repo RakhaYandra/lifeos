@@ -49,7 +49,7 @@ func newTestDB(t *testing.T) *sql.DB {
 	return db
 }
 
-//-IDOR: SetBooked/Delete hanya boleh menyentuh baris milik trip yang diberikan.
+// -IDOR: SetBooked/Delete hanya boleh menyentuh baris milik trip yang diberikan.
 func TestItineraryScopedToTrip(t *testing.T) {
 	db := newTestDB(t)
 	r := &ItineraryRepository{DB: db}
