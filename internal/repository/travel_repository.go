@@ -106,18 +106,28 @@ func (r *ItineraryRepository) List(tripID int64) ([]*ItineraryRow, error) {
 	return out, rows.Err()
 }
 
-func (r *ItineraryRepository) SetBooked(id int64, booked bool) error {
+// SetBooked hanya menyentuh baris milik tripID. RowsAffected 0 berarti
+// item tidak ada di bawah trip itu, jadi pemanggil bisa balas 404.
+func (r *ItineraryRepository) SetBooked(tripID, id int64, booked bool) (bool, error) {
 	v := 0
 	if booked {
 		v = 1
 	}
-	_, err := r.DB.Exec(`UPDATE itinerary_items SET booked=? WHERE id=?`, v, id)
-	return err
+	res, err := r.DB.Exec(`UPDATE itinerary_items SET booked=? WHERE id=? AND trip_id=?`, v, id, tripID)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
 }
 
-func (r *ItineraryRepository) Delete(id int64) error {
-	_, err := r.DB.Exec(`DELETE FROM itinerary_items WHERE id=?`, id)
-	return err
+func (r *ItineraryRepository) Delete(tripID, id int64) (bool, error) {
+	res, err := r.DB.Exec(`DELETE FROM itinerary_items WHERE id=? AND trip_id=?`, id, tripID)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
 }
 
 func (r *ItineraryRepository) TripCost(tripID int64) (float64, error) {
@@ -168,16 +178,24 @@ func (r *PackingRepository) List(tripID int64) ([]*PackingRow, error) {
 	return out, rows.Err()
 }
 
-func (r *PackingRepository) SetPacked(id int64, packed bool) error {
+func (r *PackingRepository) SetPacked(tripID, id int64, packed bool) (bool, error) {
 	v := 0
 	if packed {
 		v = 1
 	}
-	_, err := r.DB.Exec(`UPDATE packing_items SET packed=? WHERE id=?`, v, id)
-	return err
+	res, err := r.DB.Exec(`UPDATE packing_items SET packed=? WHERE id=? AND trip_id=?`, v, id, tripID)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
 }
 
-func (r *PackingRepository) Delete(id int64) error {
-	_, err := r.DB.Exec(`DELETE FROM packing_items WHERE id=?`, id)
-	return err
+func (r *PackingRepository) Delete(tripID, id int64) (bool, error) {
+	res, err := r.DB.Exec(`DELETE FROM packing_items WHERE id=? AND trip_id=?`, id, tripID)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
 }

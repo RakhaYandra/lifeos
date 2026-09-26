@@ -84,9 +84,15 @@ func (r *DecisionOptionRepository) List(decisionID int64) ([]*DecisionOptionRow,
 	return out, rows.Err()
 }
 
-func (r *DecisionOptionRepository) Delete(id int64) error {
-	_, err := r.DB.Exec(`DELETE FROM decision_options WHERE id=?`, id)
-	return err
+// Delete hanya menyentuh opsi milik decisionID. RowsAffected 0 = opsi tidak
+// ada di bawah decision itu, jadi pemanggil bisa balas 404.
+func (r *DecisionOptionRepository) Delete(decisionID, id int64) (bool, error) {
+	res, err := r.DB.Exec(`DELETE FROM decision_options WHERE id=? AND decision_id=?`, id, decisionID)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
 }
 
 type DecisionMarkRow struct {
@@ -98,11 +104,20 @@ type DecisionMarkRow struct {
 
 type DecisionMarkRepository struct{ DB *sql.DB }
 
-func (r *DecisionMarkRepository) Upsert(optionID int64, criterion string, weight, score float64) error {
-	_, err := r.DB.Exec(`INSERT INTO decision_marks(option_id,criterion,weight,score) VALUES(?,?,?,?)
+// Upsert hanya menulis mark untuk opsi yang benar-benar milik decisionID.
+// EXISTS membuat pengecekan kepemilikan atomik dengan insert-nya.
+func (r *DecisionMarkRepository) Upsert(decisionID, optionID int64, criterion string, weight, score float64) (bool, error) {
+	res, err := r.DB.Exec(`INSERT INTO decision_marks(option_id,criterion,weight,score)
+		SELECT ?,?,?,? WHERE EXISTS (
+			SELECT 1 FROM decision_options WHERE id=? AND decision_id=?
+		)
 		ON CONFLICT(option_id,criterion) DO UPDATE SET weight=excluded.weight, score=excluded.score`,
-		optionID, criterion, weight, score)
-	return err
+		optionID, criterion, weight, score, optionID, decisionID)
+	if err != nil {
+		return false, err
+	}
+	n, err := res.RowsAffected()
+	return n > 0, err
 }
 
 func (r *DecisionMarkRepository) ListByDecision(decisionID int64) ([]*DecisionMarkRow, error) {

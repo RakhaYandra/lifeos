@@ -133,8 +133,11 @@ func (h *DecisionHandler) DeleteOption(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
-	if err := h.Options.Delete(oid); err != nil {
+	if ok, err := h.Options.Delete(id, oid); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	} else if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
 	c.Status(http.StatusNoContent)
@@ -160,8 +163,11 @@ func (h *DecisionHandler) Mark(c *gin.Context) {
 	if in.Weight <= 0 {
 		in.Weight = 1
 	}
-	if err := h.Marks.Upsert(oid, in.Criterion, in.Weight, in.Score); err != nil {
+	if ok, err := h.Marks.Upsert(id, oid, in.Criterion, in.Weight, in.Score); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	} else if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
 	out, _ := h.detail(uid.(int64), id)

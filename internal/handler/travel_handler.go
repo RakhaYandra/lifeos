@@ -215,8 +215,11 @@ func (h *TravelHandler) ToggleItin(c *gin.Context) {
 		badRequest(c)
 		return
 	}
-	if err := h.Itin.SetBooked(iid, in.Booked); err != nil {
+	if ok, err := h.Itin.SetBooked(tid, iid, in.Booked); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	} else if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
 	c.Status(http.StatusNoContent)
@@ -230,8 +233,11 @@ func (h *TravelHandler) DeleteItin(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
-	if err := h.Itin.Delete(iid); err != nil {
+	if ok, err := h.Itin.Delete(tid, iid); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	} else if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
 	c.Status(http.StatusNoContent)
@@ -282,8 +288,11 @@ func (h *TravelHandler) TogglePack(c *gin.Context) {
 		badRequest(c)
 		return
 	}
-	if err := h.Pack.SetPacked(pid, in.Packed); err != nil {
+	if ok, err := h.Pack.SetPacked(tid, pid, in.Packed); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	} else if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
 	c.Status(http.StatusNoContent)
@@ -297,8 +306,11 @@ func (h *TravelHandler) DeletePack(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
-	if err := h.Pack.Delete(pid); err != nil {
+	if ok, err := h.Pack.Delete(tid, pid); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "internal"})
+		return
+	} else if !ok {
+		c.JSON(http.StatusNotFound, gin.H{"error": "not_found"})
 		return
 	}
 	c.Status(http.StatusNoContent)
